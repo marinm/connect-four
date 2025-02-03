@@ -1,0 +1,28 @@
+html {
+    font-size: min(7vw, 10mm);
+    --bg-color: #a8c64e;
+    --fg-color: #3c412c;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "VT323";
+    color: var(--fg-color);
+    border-color: var(--fg-color);
+    touch-action: manipulation;
+}
+
+body {
+    width: 100dvw;
+    height: 100dvh;
+    font-size: 1rem;
+    padding: 5vw 5vw;
+    margin: 0;
+    background-color: var(--bg-color);
+    font-weight: 400;
+    font-style: normal;
+    overflow: auto;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+}
