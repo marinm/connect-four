@@ -15,12 +15,13 @@
     grid-template-columns: repeat(7, 1fr);
     gap: 0.2rem;
     width: 100%;
-    max-width: 10rem;
+    max-width: 14rem;
 }
 
 .grid-slot {
     aspect-ratio: 1;
     border: 1px solid var(--fg-color);
+    background-color: var(--bg-color);
     border-radius: 50%;
     display: flex;
     justify-content: center;
