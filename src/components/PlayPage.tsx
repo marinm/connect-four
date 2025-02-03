@@ -1,4 +1,5 @@
 import { GoToPage } from "../types/GoToPage"
+import GameGrid from "./GameGrid";
 
 type propType = {
 	goToPage: GoToPage
@@ -7,7 +8,7 @@ type propType = {
 export default function PlayPage({goToPage}: propType) {
 	return (
 		<div className="page">
-			<h1>Play Page</h1>
+			<GameGrid />
 			<button onClick={ () => goToPage("start") }>Leave</button>
 		</div>
 	);

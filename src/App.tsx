@@ -6,7 +6,7 @@ import ErrorPage from "./components/ErrorPage";
 import "./App.css";
 
 function App() {
-    const [page, setPage] = useState<string>("start");
+    const [page, setPage] = useState<string>("play");
 
     function goToPage(pageName: string) {
         setPage(pageName);
