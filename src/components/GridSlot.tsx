@@ -1,14 +1,13 @@
-function displayValue(slotValue: number): string {
-    switch (slotValue) {
-        case 0:
-            return "";
-        case 1:
-            return "X";
-        case 2:
-            return "O";
-    }
-
-    return "";
+function getClass(value: number): string {
+	switch (value) {
+		case 0:
+			return "";
+		case 1:
+			return "player-1";
+		case 2:
+			return "player-2";
+	}
+	return "";
 }
 
 type Props = {
@@ -20,7 +19,7 @@ type Props = {
 export default function GridSlot({ index, value, select }: Props) {
     return (
         <div className="grid-slot" onClick={() => select(index)}>
-            {displayValue(value)}
+            <div className={"token " + getClass(value)}></div>
         </div>
     );
 }

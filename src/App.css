@@ -26,3 +26,21 @@
     justify-content: center;
     align-items: center;
 }
+
+.grid-slot img {
+    width: 1rem;
+}
+
+.token {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+}
+
+.player-1 {
+    border: 0.3rem solid var(--fg-color);
+}
+
+.player-2 {
+    background-color: var(--fg-color);
+}
