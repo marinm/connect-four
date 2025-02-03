@@ -25,6 +25,9 @@ function toIndex(p: Position): number {
 
 export default function GameGrid() {
     const [grid, setGrid] = useState<number[]>(emptyGrid());
+	const [turn, setTurn] = useState<number>(0);
+
+	const playerTurn = turn % 2;
 
 	function nextEmptyRow(column: number): number | null {
 		for (let i = 0; i < N_ROWS; i++) {
@@ -40,13 +43,12 @@ export default function GameGrid() {
 		const col = p.j;
 		const row = nextEmptyRow(col);
 
-		console.log(row, col);
-
 		if (row != null) {
-			grid[ toIndex({i: row, j: col}) ] = 1;
+			grid[ toIndex({i: row, j: col}) ] = playerTurn;
 		}
 
         setGrid([...grid]);
+		setTurn(turn + 1);
     }
 
     return (
