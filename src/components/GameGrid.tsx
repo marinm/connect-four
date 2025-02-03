@@ -44,12 +44,22 @@ export default function GameGrid() {
 		const row = nextEmptyRow(col);
 
 		if (row != null) {
-			grid[ toIndex({i: row, j: col}) ] = playerTurn;
+			grid[ toIndex({i: row, j: col}) ] = playerTurn + 1;
 		}
 
         setGrid([...grid]);
 		setTurn(turn + 1);
     }
+
+	function displayValue(slotValue: number): string {
+		switch (slotValue) {
+			case 0: return "";
+			case 1: return "X";
+			case 2: return "O";
+		}
+
+		return "";
+	}
 
     return (
         <div className="game-grid">
@@ -59,7 +69,7 @@ export default function GameGrid() {
                     key={index}
                     onClick={() => select(index)}
                 >
-                    {slot}
+                    {displayValue(slot)}
                 </div>
             ))}
         </div>
