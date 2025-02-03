@@ -14,7 +14,7 @@ function emptyGrid(): number[] {
 
 function position(index: number): Position {
     return {
-        i: Math.floor(index / N_COLS),
+        i: (N_ROWS - 1) - Math.floor(index / N_COLS),
         j: index % N_COLS,
     };
 }
