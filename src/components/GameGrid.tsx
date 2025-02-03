@@ -19,15 +19,33 @@ function position(index: number): Position {
     };
 }
 
+function toIndex(p: Position): number {
+	return ((N_ROWS - p.i - 1) * N_COLS) + p.j;
+}
+
 export default function GameGrid() {
     const [grid, setGrid] = useState<number[]>(emptyGrid());
 
-    function select(index: number): void {
-        for (let it = 0; it < grid.length; it++) {
-			if (position(it).j === position(index).j) {
-				grid[it] += 1;
+	function nextEmptyRow(column: number): number | null {
+		for (let i = 0; i < N_ROWS; i++) {
+			if (grid[toIndex({i, j: column})] === 0) {
+				return i;
 			}
 		}
+		return null;
+	}
+
+    function select(index: number): void {
+        const p = position(index);
+		const col = p.j;
+		const row = nextEmptyRow(col);
+
+		console.log(row, col);
+
+		if (row != null) {
+			grid[ toIndex({i: row, j: col}) ] = 1;
+		}
+
         setGrid([...grid]);
     }
 
@@ -39,7 +57,7 @@ export default function GameGrid() {
                     key={index}
                     onClick={() => select(index)}
                 >
-                    {position(index).i},{position(index).j}
+                    {slot}
                 </div>
             ))}
         </div>
