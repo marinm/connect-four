@@ -1,12 +1,13 @@
 import { useState } from "react";
 import StartPage from "./components/StartPage";
+import NamePage from "./components/NamePage";
 import ConnectPage from "./components/ConnectPage";
 import PlayPage from "./components/PlayPage";
 import ErrorPage from "./components/ErrorPage";
 import "./App.css";
 
 function App() {
-    const [page, setPage] = useState<string>("play");
+    const [page, setPage] = useState<string>("name");
 
     function goToPage(pageName: string) {
         setPage(pageName);
@@ -15,6 +16,8 @@ function App() {
     switch (page) {
         case "start":
             return <StartPage goToPage={goToPage} />;
+        case "name":
+            return <NamePage goToPage={goToPage} />;
         case "connect":
             return <ConnectPage goToPage={goToPage} />;
         case "play":
