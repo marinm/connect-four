@@ -1,10 +1,10 @@
 import { GoToPage } from "../types/GoToPage"
 
-type propType = {
+type PropType = {
 	goToPage: GoToPage
 };
 
-export default function StartPage({goToPage}: propType) {
+export default function StartPage({goToPage}: PropType) {
 	return (
 		<div className="page">
 			<h1>Start Page</h1>

@@ -1,11 +1,11 @@
 import { GoToPage } from "../types/GoToPage"
 import GameGrid from "./GameGrid";
 
-type propType = {
+type PropType = {
 	goToPage: GoToPage
 };
 
-export default function PlayPage({goToPage}: propType) {
+export default function PlayPage({goToPage}: PropType) {
 	return (
 		<div className="page">
 			<GameGrid />

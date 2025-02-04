@@ -1,10 +1,10 @@
 import { GoToPage } from "../types/GoToPage"
 
-type propType = {
+type PropType = {
 	goToPage: GoToPage
 };
 
-export default function ErrorPage({goToPage}: propType) {
+export default function ErrorPage({goToPage}: PropType) {
 	return (
 		<div className="page">
 			<h1>Error Page</h1>
