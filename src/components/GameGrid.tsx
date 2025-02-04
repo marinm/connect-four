@@ -1,26 +1,22 @@
 import { useState } from "react";
 import GridSlot from "./GridSlot";
+import { Position } from "../types/Position";
 
 const N_ROWS = 6;
 const N_COLS = 7;
-
-type Position = {
-    i: number;
-    j: number;
-};
 
 function emptyGrid(): number[] {
     return new Array(N_ROWS * N_COLS).fill(0);
 }
 
-function position(index: number): Position {
+function positionAt(index: number): Position {
     return {
         i: N_ROWS - 1 - Math.floor(index / N_COLS),
         j: index % N_COLS,
     };
 }
 
-function toIndex(p: Position): number {
+function indexAt(p: Position): number {
     return (N_ROWS - p.i - 1) * N_COLS + p.j;
 }
 
@@ -28,9 +24,10 @@ export default function GameGrid() {
     const [grid, setGrid] = useState<number[]>(emptyGrid());
     const [turn, setTurn] = useState<number>(0);
 	const [gameOver, setGameOver] = useState<boolean>(false);
+	const [four, setFour] = useState<Position[]>([]);
 
     function at(p: Position): number {
-        return grid[toIndex(p)];
+        return grid[indexAt(p)];
     }
 
     function segmentsFrom(p: Position): Position[][] {
@@ -101,7 +98,7 @@ export default function GameGrid() {
             .every((value, _, array) => value != 0 && value === array[0]);
     }
 
-    function four(p: Position): Position[] | null {
+    function fourSame(p: Position): Position[] | null {
         const segments = segmentsFrom(p);
         const match = segments.findIndex((s) => allSame(s));
 
@@ -110,15 +107,15 @@ export default function GameGrid() {
 
     function findFour(): Position[] | null {
         const search = grid
-            .map((_, index) => position(index))
-            .filter((p) => four(p) != null);
+            .map((_, index) => positionAt(index))
+            .filter((p) => fourSame(p) != null);
 
-        return search.length ? four(search[0]) : null;
+        return search.length ? fourSame(search[0]) : null;
     }
 
     function nextEmptyRow(column: number): number | null {
         for (let i = 0; i < N_ROWS; i++) {
-            if (grid[toIndex({ i, j: column })] === 0) {
+            if (grid[indexAt({ i, j: column })] === 0) {
                 return i;
             }
         }
@@ -129,12 +126,12 @@ export default function GameGrid() {
 		if (gameOver) {
 			return;
 		}
-        const p = position(index);
+        const p = positionAt(index);
         const col = p.j;
         const row = nextEmptyRow(col);
 
         if (row != null) {
-            grid[toIndex({ i: row, j: col })] = playerTurn + 1;
+            grid[indexAt({ i: row, j: col })] = playerTurn + 1;
         }
 
         setGrid([...grid]);
@@ -142,6 +139,8 @@ export default function GameGrid() {
         const connected = findFour();
 
         if (connected) {
+			console.log(connected);
+			setFour(connected)
 			setGameOver(true);
             return;
         }
@@ -172,6 +171,7 @@ export default function GameGrid() {
                         index={index}
                         value={slot}
                         select={() => select(index)}
+						connected={four.find(p => indexAt(p) === index) != undefined}
                     />
                 ))}
             </div>
