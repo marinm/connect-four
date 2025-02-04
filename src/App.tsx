@@ -7,7 +7,11 @@ import ErrorPage from "./components/ErrorPage";
 import "./App.css";
 
 function App() {
-    const [page, setPage] = useState<string>("name");
+    const name: string | null = window.localStorage.getItem("name");
+
+    const initialPage = name ? "start" : "name";
+    
+    const [page, setPage] = useState<string>(initialPage);
 
     function goToPage(pageName: string) {
         setPage(pageName);

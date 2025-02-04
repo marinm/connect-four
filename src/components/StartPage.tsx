@@ -14,6 +14,7 @@ export default function StartPage({goToPage}: PropType) {
 			Playing as {name}
 			<button onClick={ () => goToPage("connect") }>New Game</button>
 			<button onClick={ () => goToPage("connect") }>Play</button>
+			<button onClick={ () => goToPage("name") }>Change Name</button>
 		</div>
 	);
 }
