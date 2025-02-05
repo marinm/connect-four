@@ -1,4 +1,5 @@
 import { GoToPage } from "../types/GoToPage"
+import OnlineList from "./OnlineList";
 
 type PropType = {
 	goToPage: GoToPage
@@ -7,7 +8,6 @@ type PropType = {
 export default function StartPage({goToPage}: PropType) {
 
 	const name: string | null = window.localStorage.getItem("name");
-	const id: string | null = window.localStorage.getItem("id");
 
 	return (
 		<div className="page">
@@ -16,8 +16,7 @@ export default function StartPage({goToPage}: PropType) {
 				{name}
 				<button onClick={ () => goToPage("name") }>Change Name</button>
 			</div>
-			
-			
+			<OnlineList />
 		</div>
 	);
 }

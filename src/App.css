@@ -99,3 +99,20 @@ button {
     padding-bottom: 1rem;
     border-bottom: 0.1rem solid var(--fg-color);
 }
+
+.online-list {
+    width: 100%;
+}
+
+.online-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.online-list ul li {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
