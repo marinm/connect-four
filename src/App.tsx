@@ -31,7 +31,7 @@ function App() {
         case "start":
             return <StartPage goToPage={goToPage} />;
         case "name":
-            return <NamePage goToPage={goToPage} />;
+            return <NamePage goToPage={goToPage} currentName={name ?? ""} />;
         case "connect":
             return <ConnectPage goToPage={goToPage} />;
         case "play":

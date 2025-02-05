@@ -2,11 +2,12 @@ import { useState } from "react";
 import { GoToPage } from "../types/GoToPage";
 
 type PropType = {
+    currentName: string;
     goToPage: GoToPage;
 };
 
-export default function NamePage({goToPage}: PropType) {
-    const [name, setName] = useState<string>("");
+export default function NamePage({currentName, goToPage}: PropType) {
+    const [name, setName] = useState<string>(currentName);
 
     function setSanitizedName(input: string): void {
         const validChars =
