@@ -17,7 +17,9 @@ class ServerConnection {
             console.log("✅ Connected");
             if (this.shouldClose) {
                 this.socket.close();
+                return;
             }
+            this.presentSelf();
         };
 
         this.socket.onclose = () => {
@@ -31,6 +33,18 @@ class ServerConnection {
         } else {
             this.shouldClose = true;
         }
+    }
+
+    send(message: Object): void {
+        this.socket.send(JSON.stringify(message));
+    }
+
+    presentSelf() {
+        this.send({
+            id: 0,
+            name: "inukshuk",
+            status: PlayerStatus.Ready
+        });
     }
 }
 
