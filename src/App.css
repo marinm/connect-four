@@ -4,10 +4,24 @@
     max-width: 14rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     gap: 1rem;
     overflow: auto;
+}
+
+.inverted {
+    background-color: var(--fg-color);
+    color: var(--bg-color);
+}
+
+h1 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: normal;
+    margin: 0;
 }
 
 .game-grid {
