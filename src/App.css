@@ -90,3 +90,12 @@ button {
     border-bottom-width: 0.2rem;
     padding: 0.1rem 0.3rem;
 }
+
+.user-name-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 0.1rem solid var(--fg-color);
+}
