@@ -1,61 +1,30 @@
 import { useState, useEffect } from "react";
-// import { parseJSON } from "../utils/parseJSON";
+import { ServerConnectionEvent } from "../types/ServerConnectionEvent";
+import { ServerConnection } from "../utils/ServerConnection";
 import { Player, PlayerStatus } from "../types/Player";
-
-const serverURL = "https://marinm.net/broadcast?channel=connect-four-presence";
-
-
-class ServerConnection {
-    socket: WebSocket;
-    shouldClose: boolean;
-
-    constructor() {
-        this.socket = new WebSocket(serverURL);
-        this.shouldClose = false;
-
-        this.socket.onopen = () => {
-            console.log("✅ Connected");
-            if (this.shouldClose) {
-                this.socket.close();
-                return;
-            }
-            this.presentSelf();
-        };
-
-        this.socket.onclose = () => {
-            console.log("❌ Disconnected");
-        };
-    }
-
-    disconnect() {
-        if (this.socket.readyState === WebSocket.OPEN) {
-            this.socket.close();
-        } else {
-            this.shouldClose = true;
-        }
-    }
-
-    send(message: Object): void {
-        this.socket.send(JSON.stringify(message));
-    }
-
-    presentSelf() {
-        this.send({
-            id: 0,
-            name: "inukshuk",
-            status: PlayerStatus.Ready
-        });
-    }
-}
+import config from "../config";
 
 export default function OnlineList() {
     const [players] = useState<Player[]>([]);
 
-    // const id = window.localStorage.getItem("id");
-    // const name = window.localStorage.getItem("name");
+    const id = window.localStorage.getItem("id");
+    const name = window.localStorage.getItem("name");
 
     useEffect(() => {
-        const connection = new ServerConnection();
+        const connection = new ServerConnection({
+            url: config.serverURL,
+            onOpen: (event: ServerConnectionEvent) => {
+                console.log("open");
+                event.send({
+                    id: id,
+                    name: name,
+                    status: PlayerStatus.Ready,
+                });
+            },
+            onMessage: (event: ServerConnectionEvent) => {
+                console.log(event.value);
+            },
+        });
 
         return () => {
             connection.disconnect();
