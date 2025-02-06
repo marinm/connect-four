@@ -5,6 +5,7 @@ type ServerConnectionOptions<Message> = {
 	url: string,
     onOpen: (event: ServerConnectionEvent<Message>) => void;
     onMessage: (event: ServerConnectionEvent<Message>) => void;
+    validateMessage: (message: unknown) => boolean;
 };
 
 export class ServerConnection<Message> {
@@ -12,12 +13,14 @@ export class ServerConnection<Message> {
     shouldClose: boolean;
     onOpen: (event: ServerConnectionEvent<Message>) => void = () => {};
     onMessage: (event: ServerConnectionEvent<Message>) => void = () => {};
+    validateMessage: (message: unknown) => boolean;
 
-    constructor({ url, onOpen, onMessage }: ServerConnectionOptions<Message>) {
+    constructor({ url, onOpen, onMessage, validateMessage }: ServerConnectionOptions<Message>) {
         this.socket = new WebSocket(url);
         this.shouldClose = false;
         this.onOpen = onOpen;
         this.onMessage = onMessage;
+        this.validateMessage = validateMessage;
 
         this.socket.onopen = () => {
             console.log("✅ Connected");
@@ -34,7 +37,7 @@ export class ServerConnection<Message> {
 
         this.socket.onmessage = (event) => {
             const message = parseJSON(event.data);
-            if (!message) {
+            if (!this.isMessageType(message)) {
                 return;
             }
             this.onMessage({
@@ -47,6 +50,10 @@ export class ServerConnection<Message> {
         this.socket.onclose = () => {
             console.log("❌ Disconnected");
         };
+    }
+
+    isMessageType(message: unknown): message is Message {
+        return true
     }
 
     disconnect() {

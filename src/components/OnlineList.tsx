@@ -4,21 +4,26 @@ import { Player } from "../types/Player";
 import { GameMessageType } from "../types/GameMessageType";
 import config from "../config";
 
-function createConnection(myself: Player) {
+type ConnectionOptions = {
+    myself: Player;
+    onMessage: (message: GameMessageType) => void;
+};
+
+function createConnection(options: ConnectionOptions) {
     const connection = new ServerConnection<GameMessageType>({
         url: config.serverURL,
         onOpen: (event) => {
-            event.send(myself);
+            event.send(options.myself);
         },
         onMessage: (event) => {
             const message = event.value;
-            if (!message) {
-                return;
-            }
-            if (message.id === myself.id) {
-                return;
+            if (message && message.id !== options.myself.id) {
+                options.onMessage(message);
             }
         },
+        validateMessage: (message: unknown) => {
+            return !!message;
+        }
     });
     return connection;
 }
@@ -31,7 +36,12 @@ export default function OnlineList({ myself }: OnlineListOptions) {
     const [players] = useState<Player[]>([]);
 
     useEffect(() => {
-        const connection = createConnection(myself);
+        const connection = createConnection({
+            myself,
+            onMessage: () => {
+
+            }
+        });
 
         return () => {
             connection.disconnect();
