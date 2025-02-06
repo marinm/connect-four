@@ -23,7 +23,7 @@ function createConnection(options: ConnectionOptions) {
         },
         validateMessage: (message: unknown) => {
             return !!message;
-        }
+        },
     });
     return connection;
 }
@@ -38,14 +38,10 @@ export default function OnlineList({ myself }: OnlineListOptions) {
     useEffect(() => {
         const connection = createConnection({
             myself,
-            onMessage: () => {
-
-            }
+            onMessage: () => {},
         });
 
-        return () => {
-            connection.disconnect();
-        };
+        return () => connection.disconnect();
     }, []);
 
     return (
