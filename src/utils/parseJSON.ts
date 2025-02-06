@@ -1,4 +1,4 @@
-export function parseJSON(message: string): any {
+export function parseJSON(message: string): unknown {
     try {
         return JSON.parse(message);
     } catch (e) {}
