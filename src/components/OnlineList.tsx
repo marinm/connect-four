@@ -4,27 +4,29 @@ import { ServerConnection } from "../utils/ServerConnection";
 import { Player, PlayerStatus } from "../types/Player";
 import config from "../config";
 
-export default function OnlineList() {
+function createConnection(myself: Player) {
+    const connection = new ServerConnection({
+        url: config.serverURL,
+        onOpen: (event: ServerConnectionEvent) => {
+            console.log("open");
+            event.send(myself);
+        },
+        onMessage: (event: ServerConnectionEvent) => {
+            console.log(event.value);
+        },
+    });
+    return connection;
+}
+
+type OnlineListOptions = {
+    myself: Player;
+};
+
+export default function OnlineList({ myself }: OnlineListOptions) {
     const [players] = useState<Player[]>([]);
 
-    const id = window.localStorage.getItem("id");
-    const name = window.localStorage.getItem("name");
-
     useEffect(() => {
-        const connection = new ServerConnection({
-            url: config.serverURL,
-            onOpen: (event: ServerConnectionEvent) => {
-                console.log("open");
-                event.send({
-                    id: id,
-                    name: name,
-                    status: PlayerStatus.Ready,
-                });
-            },
-            onMessage: (event: ServerConnectionEvent) => {
-                console.log(event.value);
-            },
-        });
+        const connection = createConnection(myself);
 
         return () => {
             connection.disconnect();
