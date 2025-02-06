@@ -1,19 +1,19 @@
 import { ServerConnectionEvent } from "../types/ServerConnectionEvent";
 import { parseJSON } from "./parseJSON";
 
-type ServerConnectionOptions = {
+type ServerConnectionOptions<Message> = {
 	url: string,
-    onOpen: (event: ServerConnectionEvent) => void;
-    onMessage: (event: ServerConnectionEvent) => void;
+    onOpen: (event: ServerConnectionEvent<Message>) => void;
+    onMessage: (event: ServerConnectionEvent<Message>) => void;
 };
 
-export class ServerConnection {
+export class ServerConnection<Message> {
     socket: WebSocket;
     shouldClose: boolean;
-    onOpen: (event: ServerConnectionEvent) => void = () => {};
-    onMessage: (event: ServerConnectionEvent) => void = () => {};
+    onOpen: (event: ServerConnectionEvent<Message>) => void = () => {};
+    onMessage: (event: ServerConnectionEvent<Message>) => void = () => {};
 
-    constructor({ url, onOpen, onMessage }: ServerConnectionOptions) {
+    constructor({ url, onOpen, onMessage }: ServerConnectionOptions<Message>) {
         this.socket = new WebSocket(url);
         this.shouldClose = false;
         this.onOpen = onOpen;
@@ -28,7 +28,7 @@ export class ServerConnection {
             this.onOpen({
                 name: "open",
                 value: undefined,
-                send: (message: Object) => this.send(message),
+                send: (message: Message) => this.send(message),
             });
         };
 
@@ -40,7 +40,7 @@ export class ServerConnection {
             this.onMessage({
                 name: "message",
                 value: message,
-                send: (message: Object) => this.send(message),
+                send: (message: Message) => this.send(message),
             });
         };
 
@@ -57,7 +57,7 @@ export class ServerConnection {
         }
     }
 
-    send(message: Object): void {
+    send(message: Message): void {
         this.socket.send(JSON.stringify(message));
     }
 };

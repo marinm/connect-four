@@ -1,18 +1,23 @@
 import { useState, useEffect } from "react";
-import { ServerConnectionEvent } from "../types/ServerConnectionEvent";
 import { ServerConnection } from "../utils/ServerConnection";
-import { Player, PlayerStatus } from "../types/Player";
+import { Player } from "../types/Player";
+import { GameMessageType } from "../types/GameMessageType";
 import config from "../config";
 
 function createConnection(myself: Player) {
-    const connection = new ServerConnection({
+    const connection = new ServerConnection<GameMessageType>({
         url: config.serverURL,
-        onOpen: (event: ServerConnectionEvent) => {
-            console.log("open");
+        onOpen: (event) => {
             event.send(myself);
         },
-        onMessage: (event: ServerConnectionEvent) => {
-            console.log(event.value);
+        onMessage: (event) => {
+            const message = event.value;
+            if (!message) {
+                return;
+            }
+            if (message.id === myself.id) {
+                return;
+            }
         },
     });
     return connection;

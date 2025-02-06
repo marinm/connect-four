@@ -1,5 +1,5 @@
-export type ServerConnectionEvent = {
+export type ServerConnectionEvent<MessageType> = {
     name: string;
-    value: undefined | Object;
-    send: (message: Object) => void;
+    value: undefined | MessageType;
+    send: (message: MessageType) => void;
 };
