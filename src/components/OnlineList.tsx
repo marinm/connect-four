@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ServerConnection } from "../utils/ServerConnection";
 import { Player } from "../types/Player";
 import { GameMessageType } from "../types/GameMessageType";
+import PlayerList from "../logic/PlayerList";
 import config from "../config";
 
 type ConnectionOptions = {
@@ -26,29 +27,6 @@ function createConnection(options: ConnectionOptions) {
         },
     });
     return connection;
-}
-
-class PlayerList {
-    players: Player[] = [];
-
-    constructor(players: Player[]) {
-        this.players = players;
-    }
-
-    all() {
-        return [...this.players];
-    }
-
-    findIndex(player: Player) {
-        return this.players.findIndex((p) => p.id === player.id);
-    }
-
-    push(player: Player) {
-        const index = this.findIndex(player);
-        if (index === -1) {
-            this.players.push(player);
-        }
-    }
 }
 
 type OnlineListOptions = {
