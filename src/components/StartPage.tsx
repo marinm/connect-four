@@ -16,11 +16,7 @@ export default function StartPage({ goToPage }: PropType) {
     return (
         <div className="page">
             <h1 className="inverted">Connect Four</h1>
-            <div className="user-name-bar">
-                {myself.name}
-                <button onClick={() => goToPage("name")}>Change Name</button>
-            </div>
-            <OnlineList myself={myself} />
+            <OnlineList myself={myself} goToPage={goToPage} />
         </div>
     );
 }

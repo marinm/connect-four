@@ -1,14 +1,25 @@
 import { Player } from "../types/Player";
+import { GoToPage } from "../types/GoToPage";
 
 type Options = {
-	player: Player;
+    player: Player;
+    isMyself: boolean;
+	goToPage: GoToPage;
 };
 
-export default function PlayerListItem({player}: Options) {
-	return (
-		<li>
-			<div>{player.name}</div>
-			<div>{player.status}</div>
-		</li>
-	)
+export default function PlayerListItem({ player, isMyself, goToPage }: Options) {
+    return (
+        <li>
+            <div>
+                {player.name}
+            </div>
+            <div>{isMyself ? (
+                    <button onClick={() => goToPage("name")}>
+                        Change Name
+                    </button>
+                ) : (
+                    player.status
+                )}</div>
+        </li>
+    );
 }

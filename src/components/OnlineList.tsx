@@ -3,16 +3,20 @@ import { Player } from "../types/Player";
 import PlayerList from "../logic/PlayerList";
 import PlayerListItem from "./PlayerListItem";
 import createPresenceConnection from "../logic/createPresenceConnection";
+import { GoToPage } from "../types/GoToPage";
 
 type OnlineListOptions = {
     myself: Player;
+    goToPage: GoToPage;
 };
 
-export default function OnlineList({ myself }: OnlineListOptions) {
+export default function OnlineList({ myself, goToPage }: OnlineListOptions) {
     const [players, setPlayers] = useState<Player[]>([]);
 
     useEffect(() => {
         const playerList = new PlayerList(players);
+
+        playerList.push(myself);
 
         const connection = createPresenceConnection({
             myself,
@@ -34,10 +38,15 @@ export default function OnlineList({ myself }: OnlineListOptions) {
 
     return (
         <div className="online-list">
-            {players.length ? "" : "Noone else is online"}
+            ONLINE ({players.length})
             <ul>
                 {players.map((p) => (
-                    <PlayerListItem key={p.id} player={p} />
+                    <PlayerListItem
+                        key={p.id}
+                        player={p}
+                        isMyself={p.id === myself.id}
+                        goToPage={goToPage}
+                    />
                 ))}
             </ul>
         </div>

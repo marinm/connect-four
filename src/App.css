@@ -122,5 +122,8 @@ button {
 
 .online-list ul li:active {
     background-color: var(--fg-color);
-    color: var(--bg-color);
+
+    > * {
+        color: var(--bg-color);
+    }
 }
