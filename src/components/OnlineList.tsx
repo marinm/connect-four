@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Player } from "../types/Player";
 import PlayerList from "../logic/PlayerList";
+import PlayerListItem from "./PlayerListItem";
 import createPresenceConnection from "../logic/createPresenceConnection";
 
 type OnlineListOptions = {
@@ -33,10 +34,10 @@ export default function OnlineList({ myself }: OnlineListOptions) {
 
     return (
         <div className="online-list">
-            {players.length} online
+            {players.length ? "" : "Noone else is online"}
             <ul>
                 {players.map((p) => (
-                    <li key={p.id}>{p.name}</li>
+                    <PlayerListItem key={p.id} player={p} />
                 ))}
             </ul>
         </div>
