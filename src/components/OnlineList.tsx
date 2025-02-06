@@ -33,15 +33,29 @@ type OnlineListOptions = {
 };
 
 export default function OnlineList({ myself }: OnlineListOptions) {
-    const [players] = useState<Player[]>([]);
+    const [players, setPlayers] = useState<Player[]>([]);
+
+    function push(player: Player) {
+        const isNew = (players.findIndex((p) => p.id === player.id) === -1);
+        if (isNew) {
+            setPlayers([...players, player]);
+        }
+    }
 
     useEffect(() => {
         const connection = createConnection({
             myself,
-            onMessage: () => {},
+            onMessage: (message) => {push(message)},
         });
 
-        return () => connection.disconnect();
+        const presenceInterval = setInterval(() => {
+            connection.send(myself);
+        }, 5000);
+
+        return () => {
+            clearInterval(presenceInterval);
+            connection.disconnect();
+        }
     }, []);
 
     return (
