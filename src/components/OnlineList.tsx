@@ -20,6 +20,9 @@ export default function OnlineList({ myself, goToPage }: OnlineListOptions) {
 
         const connection = createPresenceConnection({
             myself,
+            onOpen: () => {
+                connection.send(myself);
+            },
             onMessage: (message) => {
                 playerList.push(message);
                 setPlayers([...playerList.all()]);

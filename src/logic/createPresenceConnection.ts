@@ -1,10 +1,12 @@
 import config from "../config";
 import { ServerConnection } from "../utils/ServerConnection";
 import { GameMessageType } from "../types/GameMessageType";
+import { ServerConnectionEvent } from "../types/ServerConnectionEvent";
 import { Player } from "../types/Player";
 
 type ConnectionOptions = {
 	myself: Player;
+	onOpen: (event: ServerConnectionEvent<GameMessageType>) => void;
 	onMessage: (message: GameMessageType) => void;
 };
 
