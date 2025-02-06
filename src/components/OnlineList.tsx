@@ -28,6 +28,29 @@ function createConnection(options: ConnectionOptions) {
     return connection;
 }
 
+class PlayerList {
+    players: Player[] = [];
+
+    constructor(players: Player[]) {
+        this.players = players;
+    }
+
+    all() {
+        return [...this.players];
+    }
+
+    findIndex(player: Player) {
+        return this.players.findIndex((p) => p.id === player.id);
+    }
+
+    push(player: Player) {
+        const index = this.findIndex(player);
+        if (index === -1) {
+            this.players.push(player);
+        }
+    }
+}
+
 type OnlineListOptions = {
     myself: Player;
 };
@@ -35,17 +58,15 @@ type OnlineListOptions = {
 export default function OnlineList({ myself }: OnlineListOptions) {
     const [players, setPlayers] = useState<Player[]>([]);
 
-    function push(player: Player) {
-        const isNew = (players.findIndex((p) => p.id === player.id) === -1);
-        if (isNew) {
-            setPlayers([...players, player]);
-        }
-    }
-
     useEffect(() => {
+        const playerList = new PlayerList(players);
+
         const connection = createConnection({
             myself,
-            onMessage: (message) => {push(message)},
+            onMessage: (message) => {
+                playerList.push(message);
+                setPlayers([...playerList.all()])
+            },
         });
 
         const presenceInterval = setInterval(() => {
