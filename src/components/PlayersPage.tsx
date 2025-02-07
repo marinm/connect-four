@@ -1,22 +1,17 @@
 import { GoToPage } from "../types/GoToPage";
 import OnlineList from "./OnlineList";
-import { Player, PlayerStatus } from "../types/Player";
+import { Player } from "../types/Player";
 
-type PropType = {
+type Props = {
+    myself: Player,
     goToPage: GoToPage;
 };
 
-export default function PlayersPage({ goToPage }: PropType) {
-    const myself: Player = {
-        id: window.localStorage.getItem("id") ?? "",
-        name: window.localStorage.getItem("name") ?? "",
-        status: PlayerStatus.Ready,
-    };
-
+export default function PlayersPage(props: Props) {
     return (
         <div className="page">
             <h1 className="inverted">Connect Four</h1>
-            <OnlineList myself={myself} goToPage={goToPage} />
+            <OnlineList myself={props.myself} goToPage={props.goToPage} />
         </div>
     );
 }

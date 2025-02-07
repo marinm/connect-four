@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PlayersPage from "./components/PlayersPage";
+import { Player, PlayerStatus } from "./types/Player";
 import NamePage from "./components/NamePage";
 import ConnectPage from "./components/ConnectPage";
 import PlayPage from "./components/PlayPage";
@@ -11,7 +12,7 @@ function App() {
     const [id, setId] = useState<string>("");
     const [page, setPage] = useState<string>("");
 
-    const name: string | null = window.localStorage.getItem("name");
+    const name: string = window.localStorage.getItem("name") ?? "";
 
     if (!page.length) {
         setPage(name ? "players" : "name");
@@ -26,9 +27,15 @@ function App() {
         }
     }
 
+    const myself: Player = {
+        id: id,
+        name: name,
+        status: PlayerStatus.Ready,
+    };
+
     switch (page) {
         case "players":
-            return <PlayersPage goToPage={setPage} />;
+            return <PlayersPage myself={myself} goToPage={setPage} />;
         case "name":
             return <NamePage goToPage={setPage} currentName={name ?? ""} />;
         case "connect":
