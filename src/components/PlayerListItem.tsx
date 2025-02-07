@@ -9,7 +9,7 @@ type Options = {
 
 export default function PlayerListItem({ player, isMyself, goToPage }: Options) {
     return (
-        <li>
+        <li onClick={() => goToPage("connect")}>
             <div>
                 {player.name}
             </div>
