@@ -23,22 +23,18 @@ function App() {
         }
     }
 
-    function goToPage(pageName: string) {
-        setPage(pageName);
-    }
-
     switch (page) {
         case "start":
-            return <StartPage goToPage={goToPage} />;
+            return <StartPage goToPage={setPage} />;
         case "name":
-            return <NamePage goToPage={goToPage} currentName={name ?? ""} />;
+            return <NamePage goToPage={setPage} currentName={name ?? ""} />;
         case "connect":
-            return <ConnectPage goToPage={goToPage} />;
+            return <ConnectPage goToPage={setPage} />;
         case "play":
-            return <PlayPage goToPage={goToPage} />;
+            return <PlayPage goToPage={setPage} />;
     }
 
-    return <ErrorPage goToPage={goToPage} />
+    return <ErrorPage goToPage={setPage} />
 }
 
 export default App;
