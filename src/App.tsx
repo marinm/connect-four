@@ -1,5 +1,5 @@
 import { useState } from "react";
-import StartPage from "./components/StartPage";
+import PlayersPage from "./components/PlayersPage";
 import NamePage from "./components/NamePage";
 import ConnectPage from "./components/ConnectPage";
 import PlayPage from "./components/PlayPage";
@@ -14,7 +14,7 @@ function App() {
     const name: string | null = window.localStorage.getItem("name");
 
     if (!page.length) {
-        setPage(name ? "start" : "name");
+        setPage(name ? "players" : "name");
     }
 
     if (!id.length) {
@@ -27,8 +27,8 @@ function App() {
     }
 
     switch (page) {
-        case "start":
-            return <StartPage goToPage={setPage} />;
+        case "players":
+            return <PlayersPage goToPage={setPage} />;
         case "name":
             return <NamePage goToPage={setPage} currentName={name ?? ""} />;
         case "connect":

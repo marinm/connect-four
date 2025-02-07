@@ -6,7 +6,7 @@ type PropType = {
     goToPage: GoToPage;
 };
 
-export default function StartPage({ goToPage }: PropType) {
+export default function PlayersPage({ goToPage }: PropType) {
     const myself: Player = {
         id: window.localStorage.getItem("id") ?? "",
         name: window.localStorage.getItem("name") ?? "",
