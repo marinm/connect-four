@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PlayersPage from "./components/PlayersPage";
 import { Player, PlayerStatus } from "./types/Player";
 import NamePage from "./components/NamePage";
@@ -6,6 +6,7 @@ import ConnectPage from "./components/ConnectPage";
 import PlayPage from "./components/PlayPage";
 import ErrorPage from "./components/ErrorPage";
 import { randomDigits } from "./utils/randomDigits";
+import createPresenceConnection from "./logic/createPresenceConnection";
 import "./App.css";
 
 function App() {
@@ -33,9 +34,30 @@ function App() {
         status: PlayerStatus.Ready,
     };
 
+    const [players, setPlayers] = useState<Player[]>([]);
+
+    useEffect(() => {
+        const connection = createPresenceConnection({
+            myself: myself,
+            onChange(players: Player[]) {
+                setPlayers([...players]);
+            },
+        });
+
+        return () => {
+            connection.disconnect();
+        };
+    }, []);
+
     switch (page) {
         case "players":
-            return <PlayersPage myself={myself} goToPage={setPage} />;
+            return (
+                <PlayersPage
+                    myself={myself}
+                    players={players}
+                    goToPage={setPage}
+                />
+            );
         case "name":
             return <NamePage goToPage={setPage} currentName={name ?? ""} />;
         case "connect":

@@ -1,31 +1,15 @@
-import { useState, useEffect } from "react";
 import { Player } from "../types/Player";
 import PlayerListItem from "./PlayerListItem";
-import createPresenceConnection from "../logic/createPresenceConnection";
 import { GoToPage } from "../types/GoToPage";
 
 type Props = {
     myself: Player;
+    players: Player[];
     goToPage: GoToPage;
 };
 
 export default function PlayersPage(props: Props) {
-    const [players, setPlayers] = useState<Player[]>([]);
-
-    useEffect(() => {
-        const connection = createPresenceConnection({
-            myself: props.myself,
-            onChange(players: Player[]) {
-                setPlayers([...players]);
-            },
-        });
-
-        return () => {
-            connection.disconnect();
-        };
-    }, []);
-
-    const others = players.filter((p) => p.id != props.myself.id);
+    const others = props.players.filter((p) => p.id != props.myself.id);
 
     return (
         <div className="page">
