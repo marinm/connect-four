@@ -1,5 +1,4 @@
 import { Player } from "../types/Player";
-import PlayerListItem from "./PlayerListItem";
 import { GoToPage } from "../types/GoToPage";
 
 type Props = {
@@ -21,12 +20,10 @@ export default function PlayersPage(props: Props) {
                 </button>
                 <ul>
                     {others.map((p) => (
-                        <PlayerListItem
-                            key={p.id}
-                            player={p}
-                            isMyself={p.id === props.myself.id}
-                            goToPage={props.goToPage}
-                        />
+                        <li onClick={() => props.goToPage("connect")}>
+                            <div>{p.name}</div>
+                            <div>{p.status}</div>
+                        </li>
                     ))}
                 </ul>
             </div>
