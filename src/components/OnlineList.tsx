@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Player } from "../types/Player";
-import PlayerList from "../logic/PlayerList";
 import PlayerListItem from "./PlayerListItem";
 import createPresenceConnection from "../logic/createPresenceConnection";
 import { GoToPage } from "../types/GoToPage";
@@ -14,27 +13,14 @@ export default function OnlineList({ myself, goToPage }: OnlineListOptions) {
     const [players, setPlayers] = useState<Player[]>([]);
 
     useEffect(() => {
-        const playerList = new PlayerList(players);
-
-        playerList.push(myself);
-
         const connection = createPresenceConnection({
             myself,
-            onOpen: () => {
-                connection.send(myself);
-            },
-            onMessage: (message) => {
-                playerList.push(message);
-                setPlayers([...playerList.all()]);
-            },
+            onChange(players: Player[]) {
+                setPlayers([...players]);
+            }
         });
 
-        const presenceInterval = setInterval(() => {
-            connection.send(myself);
-        }, 5000);
-
         return () => {
-            clearInterval(presenceInterval);
             connection.disconnect();
         };
     }, []);

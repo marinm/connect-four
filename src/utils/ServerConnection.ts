@@ -1,26 +1,28 @@
-import { ServerConnectionEvent } from "../types/ServerConnectionEvent";
 import { parseJSON } from "./parseJSON";
 
-type ServerConnectionOptions<Message> = {
+type Options<Message> = {
 	url: string,
-    onOpen: (event: ServerConnectionEvent<Message>) => void;
-    onMessage: (event: ServerConnectionEvent<Message>) => void;
+    onOpen: () => void;
+    onMessage: (message: Message) => void;
+    onClose:() => void;
     validateMessage: (message: unknown) => boolean;
 };
 
 export class ServerConnection<Message> {
     socket: WebSocket;
     shouldClose: boolean;
-    onOpen: (event: ServerConnectionEvent<Message>) => void = () => {};
-    onMessage: (event: ServerConnectionEvent<Message>) => void = () => {};
+    onOpen: () => void = () => {};
+    onMessage: (message: Message) => void = () => {};
+    onClose: () => void = () => {};
     validateMessage: (message: unknown) => boolean;
 
-    constructor({ url, onOpen, onMessage, validateMessage }: ServerConnectionOptions<Message>) {
-        this.socket = new WebSocket(url);
+    constructor(options: Options<Message>) {
+        this.socket = new WebSocket(options.url);
         this.shouldClose = false;
-        this.onOpen = onOpen;
-        this.onMessage = onMessage;
-        this.validateMessage = validateMessage;
+        this.onOpen = options.onOpen;
+        this.onMessage = options.onMessage;
+        this.onClose = this.onClose;
+        this.validateMessage = options.validateMessage;
 
         this.socket.onopen = () => {
             console.log("✅ Connected");
@@ -28,11 +30,7 @@ export class ServerConnection<Message> {
                 this.socket.close();
                 return;
             }
-            this.onOpen({
-                name: "open",
-                value: undefined,
-                send: (message: Message) => this.send(message),
-            });
+            this.onOpen();
         };
 
         this.socket.onmessage = (event) => {
@@ -40,15 +38,12 @@ export class ServerConnection<Message> {
             if (!this.isMessageType(message)) {
                 return;
             }
-            this.onMessage({
-                name: "message",
-                value: message,
-                send: (message: Message) => this.send(message),
-            });
+            this.onMessage(message);
         };
 
         this.socket.onclose = () => {
             console.log("❌ Disconnected");
+            this.onClose();
         };
     }
 
@@ -65,6 +60,9 @@ export class ServerConnection<Message> {
     }
 
     send(message: Message): void {
+        if (this.socket.readyState != WebSocket.OPEN) {
+            return;
+        }
         this.socket.send(JSON.stringify(message));
     }
 };
