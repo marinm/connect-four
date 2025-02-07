@@ -3,7 +3,7 @@ import OnlineList from "./OnlineList";
 import { Player } from "../types/Player";
 
 type Props = {
-    myself: Player,
+    myself: Player;
     goToPage: GoToPage;
 };
 
