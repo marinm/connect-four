@@ -49,13 +49,22 @@ function App() {
         };
     }, []);
 
+    function invite(player: Player): void {
+        console.log("invite player " + player.id);
+    }
+
+    function changeName() {
+        setPage("name");
+    }
+
     switch (page) {
         case "players":
             return (
                 <PlayersPage
                     myself={myself}
                     players={players}
-                    goToPage={setPage}
+                    invite={invite}
+                    changeName={changeName}
                 />
             );
         case "name":

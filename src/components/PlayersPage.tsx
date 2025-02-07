@@ -1,10 +1,10 @@
 import { Player } from "../types/Player";
-import { GoToPage } from "../types/GoToPage";
 
 type Props = {
     myself: Player;
     players: Player[];
-    goToPage: GoToPage;
+    invite: (player: Player) => void;
+    changeName: () => void;
 };
 
 export default function PlayersPage(props: Props) {
@@ -15,14 +15,15 @@ export default function PlayersPage(props: Props) {
             <h1 className="inverted">Connect Four</h1>
             <div className="online-list">
                 {props.myself.name}{" "}
-                <button onClick={() => props.goToPage("name")}>
-                    Change Name
-                </button>
+                <button onClick={() => props.changeName()}>Change Name</button>
                 <ul>
-                    {others.map((p) => (
-                        <li onClick={() => props.goToPage("connect")}>
-                            <div>{p.name}</div>
-                            <div>{p.status}</div>
+                    {others.map((player) => (
+                        <li
+                            onClick={() => props.invite(player)}
+                            key={player.id}
+                        >
+                            <div>{player.name}</div>
+                            <div>{player.status}</div>
                         </li>
                     ))}
                 </ul>
