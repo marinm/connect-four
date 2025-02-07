@@ -8,10 +8,14 @@ type Options = {
     onChange: (players: Player[]) => void;
 };
 
+const MIN_ANNOUNCE_PAUSE = 1000;
+const MAX_ANNOUNCE_PAUSE = 5000;
+
 export default function createPresenceConnection(options: Options) {
     let presenceInterval: number | null = null;
 
     let players: Player[] = [];
+    let announcedAt: number = 0;
 
     function same(current: Player, prev: Player) {
         return current.name === prev.name && current.status === prev.status;
@@ -38,11 +42,11 @@ export default function createPresenceConnection(options: Options) {
     const connection = new ServerConnection<PresenceMessage>({
         url: config.serverURL,
         onOpen: () => {
-            connection.send(options.myself);
+            announceMyself();
 
             presenceInterval = window.setInterval(() => {
-                connection.send(options.myself);
-            }, 5000);
+                announceMyself();
+            }, MAX_ANNOUNCE_PAUSE);
         },
         onMessage: (message: PresenceMessage) => {
             // Ignore messages from self
@@ -51,6 +55,7 @@ export default function createPresenceConnection(options: Options) {
             }
             const player: Player = message;
             push(player);
+            announceMyself();
         },
         onClose: () => {
             players = [];
@@ -69,5 +74,13 @@ export default function createPresenceConnection(options: Options) {
             );
         },
     });
+
+    function announceMyself() {
+        const now = Date.now();
+        if (now - announcedAt >= MIN_ANNOUNCE_PAUSE) {
+            connection.send(options.myself);
+            announcedAt = now;
+        }
+    }
     return connection;
 }
