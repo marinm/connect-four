@@ -44,7 +44,7 @@ function App() {
             return <PlayPage goToPage={setPage} />;
     }
 
-    return <ErrorPage goToPage={setPage} />
+    return <ErrorPage goToPage={setPage} />;
 }
 
 export default App;
