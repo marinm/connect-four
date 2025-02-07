@@ -50,7 +50,10 @@ function App() {
     }, []);
 
     function invite(player: Player): void {
-        console.log("invite player " + player.id);
+        const newGameChannel = randomDigits(8);
+        console.log(
+            `invite player ${player.id} (${player.name}) on channel ${newGameChannel}`
+        );
     }
 
     function changeName() {
