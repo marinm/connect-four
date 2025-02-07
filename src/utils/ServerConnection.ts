@@ -1,10 +1,10 @@
 import { parseJSON } from "./parseJSON";
 
 type Options<Message> = {
-	url: string,
+    url: string;
     onOpen: () => void;
     onMessage: (message: Message) => void;
-    onClose:() => void;
+    onClose: () => void;
     validateMessage: (message: unknown) => boolean;
 };
 
@@ -35,7 +35,7 @@ export class ServerConnection<Message> {
 
         this.socket.onmessage = (event) => {
             const message = parseJSON(event.data);
-            if (!this.isMessageType(message)) {
+            if (message === null || !this.isMessageType(message)) {
                 return;
             }
             this.onMessage(message);
@@ -48,7 +48,7 @@ export class ServerConnection<Message> {
     }
 
     isMessageType(message: unknown): message is Message {
-        return true
+        return this.validateMessage(message);
     }
 
     disconnect() {
@@ -65,4 +65,4 @@ export class ServerConnection<Message> {
         }
         this.socket.send(JSON.stringify(message));
     }
-};
+}

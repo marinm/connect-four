@@ -2,36 +2,64 @@ import config from "../config";
 import { ServerConnection } from "../utils/ServerConnection";
 import { GameMessageType } from "../types/GameMessageType";
 import { Player } from "../types/Player";
+import { PresenceMessage } from "../types/GameMessageType";
 
 type Options = {
     myself: Player;
-	onChange: (players: Player[]) => void;
+    onChange: (players: Player[]) => void;
 };
 
 export default function createPresenceConnection(options: Options) {
-	let presenceInterval: number|null = null;
+    let presenceInterval: number | null = null;
 
-    const connection = new ServerConnection<GameMessageType>({
+    let players: Player[] = [];
+
+    function findIndex(player: Player) {
+        return players.findIndex((p) => p.id === player.id);
+    }
+
+    function push(player: Player) {
+        const index = findIndex(player);
+        if (index === -1) {
+            players.push(player);
+            options.onChange(players);
+        }
+    }
+
+    push(options.myself);
+
+    const connection = new ServerConnection<PresenceMessage>({
         url: config.serverURL,
         onOpen: () => {
             connection.send(options.myself);
 
-			presenceInterval = window.setInterval(() => {
-				connection.send(options.myself);
-			}, 5000);
+            presenceInterval = window.setInterval(() => {
+                connection.send(options.myself);
+            }, 5000);
         },
-        onMessage: (message) => {
-            if (message.id !== options.myself.id) {
-                // options.onMessage(message);
+        onMessage: (message: PresenceMessage) => {
+            // Ignore messages from self
+            if (message.id == options.myself.id) {
+                return;
+            }
+            const player: Player = message;
+            push(player);
+        },
+        onClose: () => {
+            players = [];
+            options.onChange(players);
+            if (presenceInterval != null) {
+                window.clearInterval(presenceInterval);
             }
         },
-		onClose: () => {
-			if (presenceInterval != null) {
-				window.clearInterval(presenceInterval);
-			}
-		},
         validateMessage: (message: unknown) => {
-            return !!message;
+            return (
+                !!message &&
+                typeof message === "object" &&
+                "id" in message &&
+                "name" in message &&
+                "status" in message
+            );
         },
     });
     return connection;
