@@ -7,23 +7,11 @@ type Options = {
     goToPage: GoToPage;
 };
 
-export default function PlayerListItem({
-    player,
-    isMyself,
-    goToPage,
-}: Options) {
+export default function PlayerListItem({ player, goToPage }: Options) {
     return (
         <li onClick={() => goToPage("connect")}>
             <div>{player.name}</div>
-            <div>
-                {isMyself ? (
-                    <button onClick={() => goToPage("name")}>
-                        Change Name
-                    </button>
-                ) : (
-                    player.status
-                )}
-            </div>
+            <div>{player.status}</div>
         </li>
     );
 }

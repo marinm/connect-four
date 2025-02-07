@@ -17,7 +17,7 @@ export default function OnlineList({ myself, goToPage }: OnlineListOptions) {
             myself,
             onChange(players: Player[]) {
                 setPlayers([...players]);
-            }
+            },
         });
 
         return () => {
@@ -25,11 +25,14 @@ export default function OnlineList({ myself, goToPage }: OnlineListOptions) {
         };
     }, []);
 
+    const others = players.filter((p) => p.id != myself.id);
+
     return (
         <div className="online-list">
-            ONLINE ({players.length})
+            {myself.name}{" "}
+            <button onClick={() => goToPage("name")}>Change Name</button>
             <ul>
-                {players.map((p) => (
+                {others.map((p) => (
                     <PlayerListItem
                         key={p.id}
                         player={p}
