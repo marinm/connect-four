@@ -11,7 +11,9 @@ type Options = {
 const MIN_ANNOUNCE_PAUSE = 1000;
 const MAX_ANNOUNCE_PAUSE = 5000;
 
-export default function createPresenceConnection(options: Options) {
+export default function createPresenceConnection(
+    options: Options
+): ServerConnection<PresenceMessage> {
     let presenceInterval: number | null = null;
 
     let players: Player[] = [];
