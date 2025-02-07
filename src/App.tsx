@@ -8,13 +8,16 @@ import { randomDigits } from "./utils/randomDigits";
 import "./App.css";
 
 function App() {
-    const name: string | null = window.localStorage.getItem("name");
-    const initialPage = name ? "start" : "name";
+    const [id, setId] = useState<string>("");
+    const [page, setPage] = useState<string>("");
 
-    const [id, setId] = useState<string | null>(null);
-    const [page, setPage] = useState<string>(initialPage);
-    
-    if (id === null) {
+    const name: string | null = window.localStorage.getItem("name");
+
+    if (!page.length) {
+        setPage(name ? "start" : "name");
+    }
+
+    if (!id.length) {
         const storedId = window.localStorage.getItem("id");
         const randomId = storedId ?? randomDigits(8);
         setId(randomId);
