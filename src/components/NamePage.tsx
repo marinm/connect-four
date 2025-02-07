@@ -6,7 +6,7 @@ type PropType = {
     goToPage: GoToPage;
 };
 
-export default function NamePage({currentName, goToPage}: PropType) {
+export default function NamePage({ currentName, goToPage }: PropType) {
     const [name, setName] = useState<string>(currentName);
 
     function setSanitizedName(input: string): void {
@@ -21,14 +21,14 @@ export default function NamePage({currentName, goToPage}: PropType) {
         setName(sanitized);
     }
 
-	function saveName(): void {
-		if (!name.length) {
-			return;
-		}
+    function saveName(): void {
+        if (!name.length) {
+            return;
+        }
 
-		window.localStorage.setItem("name", name);
-		goToPage("start");
-	}
+        window.localStorage.setItem("name", name);
+        goToPage("players");
+    }
 
     return (
         <div className="page">
@@ -38,7 +38,9 @@ export default function NamePage({currentName, goToPage}: PropType) {
                 value={name}
                 onChange={(event) => setSanitizedName(event.target.value)}
             />
-            <button type="button" onClick={() => saveName()}>Done</button>
+            <button type="button" onClick={() => saveName()}>
+                Done
+            </button>
         </div>
     );
 }
