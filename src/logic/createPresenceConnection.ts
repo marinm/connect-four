@@ -39,12 +39,11 @@ export default function createPresenceConnection(
         options.onChange(players);
     }
 
-    push(options.myself);
-
     const connection = new ServerConnection<PresenceMessage>({
         url: config.serverURL,
         onOpen: () => {
             announceMyself();
+            push(options.myself);
 
             presenceInterval = window.setInterval(() => {
                 announceMyself();
