@@ -1,6 +1,5 @@
 import config from "../config";
 import { ServerConnection } from "../utils/ServerConnection";
-import { GameMessageType } from "../types/GameMessageType";
 import { Player } from "../types/Player";
 import { PresenceMessage } from "../types/GameMessageType";
 
@@ -14,16 +13,24 @@ export default function createPresenceConnection(options: Options) {
 
     let players: Player[] = [];
 
-    function findIndex(player: Player) {
-        return players.findIndex((p) => p.id === player.id);
+    function same(current: Player, prev: Player) {
+        return current.name === prev.name && current.status === prev.status;
     }
 
     function push(player: Player) {
-        const index = findIndex(player);
-        if (index === -1) {
-            players.push(player);
-            options.onChange(players);
+        const index = players.findIndex((p) => p.id === player.id);
+
+        // Do nothing if the player hasn't changed
+        if (index > -1 && same(player, players[index])) {
+            return;
         }
+
+        if (index > -1) {
+            players[index] = player;
+        } else {
+            players.push(player);
+        }
+        options.onChange(players);
     }
 
     push(options.myself);
