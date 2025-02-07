@@ -4,22 +4,26 @@ import { GoToPage } from "../types/GoToPage";
 type Options = {
     player: Player;
     isMyself: boolean;
-	goToPage: GoToPage;
+    goToPage: GoToPage;
 };
 
-export default function PlayerListItem({ player, isMyself, goToPage }: Options) {
+export default function PlayerListItem({
+    player,
+    isMyself,
+    goToPage,
+}: Options) {
     return (
         <li onClick={() => goToPage("connect")}>
+            <div>{player.name}</div>
             <div>
-                {player.name}
-            </div>
-            <div>{isMyself ? (
+                {isMyself ? (
                     <button onClick={() => goToPage("name")}>
                         Change Name
                     </button>
                 ) : (
                     player.status
-                )}</div>
+                )}
+            </div>
         </li>
     );
 }
