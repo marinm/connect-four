@@ -1,4 +1,4 @@
-import { classList } from "../utils/classList";
+import { classes } from "../utils/classes";
 
 type Props = {
     index: number;
@@ -8,12 +8,12 @@ type Props = {
 };
 
 export default function GridSlot({ index, value, select, connected }: Props) {
-    const slotClasses = classList({
+    const slotClasses = classes({
         "grid-slot": true,
         connected: connected,
     });
 
-    const tokenClasses = classList({
+    const tokenClasses = classes({
         token: true,
         "player-1": value === 1,
         "player-2": value === 2,

@@ -60,6 +60,12 @@ function App() {
         setPage("name");
     }
 
+    // Needs a name, or wants to change name
+
+    // Not yet connected
+
+    // Has a name and is connected
+
     switch (page) {
         case "players":
             return (
