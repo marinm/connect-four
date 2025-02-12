@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type PropType = {
     currentName: string;
@@ -7,6 +7,7 @@ type PropType = {
 
 export default function NamePage({ currentName, saveName }: PropType) {
     const [name, setName] = useState<string>(currentName);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     function setSanitizedName(input: string): void {
         const validChars =
@@ -28,11 +29,19 @@ export default function NamePage({ currentName, saveName }: PropType) {
         saveName(name);
     }
 
+    useEffect(() => {
+        if (inputRef.current != null) {
+            inputRef.current.focus();
+        }
+    }, [inputRef.current]);
+
     return (
         <div className="page">
             What's your name?
             <input
                 type="text"
+                ref={inputRef}
+                autoComplete="off"
                 value={name}
                 onChange={(event) => setSanitizedName(event.target.value)}
             />
