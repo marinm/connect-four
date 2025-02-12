@@ -86,7 +86,7 @@ function App() {
 
     switch (page) {
         case "loading":
-            return "";
+            return "Loading...";
         case "players":
             return (
                 <PlayersPage
