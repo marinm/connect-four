@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { GoToPage } from "../types/GoToPage";
 
 type PropType = {
     currentName: string;
-    goToPage: GoToPage;
+    saveName: (name: string) => void;
 };
 
-export default function NamePage({ currentName, goToPage }: PropType) {
+export default function NamePage({ currentName, saveName }: PropType) {
     const [name, setName] = useState<string>(currentName);
 
     function setSanitizedName(input: string): void {
@@ -21,13 +20,12 @@ export default function NamePage({ currentName, goToPage }: PropType) {
         setName(sanitized);
     }
 
-    function saveName(): void {
-        if (!name.length) {
+    function trySave() {
+        if (!name) {
             return;
         }
 
-        window.localStorage.setItem("name", name);
-        goToPage("players");
+        saveName(name);
     }
 
     return (
@@ -38,7 +36,7 @@ export default function NamePage({ currentName, goToPage }: PropType) {
                 value={name}
                 onChange={(event) => setSanitizedName(event.target.value)}
             />
-            <button type="button" onClick={() => saveName()}>
+            <button type="button" onClick={trySave}>
                 Done
             </button>
         </div>

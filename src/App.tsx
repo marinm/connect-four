@@ -6,26 +6,32 @@ import ConnectPage from "./components/ConnectPage";
 import PlayPage from "./components/PlayPage";
 import ErrorPage from "./components/ErrorPage";
 import { randomDigits } from "./utils/randomDigits";
-import createPresenceConnection from "./logic/createPresenceConnection";
+import PresenceConnection from "./logic/PresenceConnection";
 import "./App.css";
 
 function App() {
     const [id, setId] = useState<string>("");
-    const [page, setPage] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(true);
+    const [page, setPage] = useState<string>("loading");
+    const [name, setName] = useState<string>("");
+    const [players, setPlayers] = useState<Player[]>([]);
+    const [presenceConnection, setPresenceConnection] =
+        useState<null | PresenceConnection>(null);
 
-    const name: string = window.localStorage.getItem("name") ?? "";
+    if (loading) {
+        const storedName: string = window.localStorage.getItem("name") ?? "";
+        setName(storedName);
 
-    if (!page.length) {
-        setPage(name ? "players" : "name");
-    }
-
-    if (!id.length) {
         const storedId = window.localStorage.getItem("id");
         const randomId = storedId ?? randomDigits(8);
         setId(randomId);
         if (storedId === null) {
             window.localStorage.setItem("id", randomId);
         }
+
+        setLoading(false);
+
+        setPage(storedName ? "players" : "name");
     }
 
     const myself: Player = {
@@ -34,18 +40,20 @@ function App() {
         status: PlayerStatus.Ready,
     };
 
-    const [players, setPlayers] = useState<Player[]>([]);
-
     useEffect(() => {
-        const connection = createPresenceConnection({
-            myself: myself,
-            onChange(players: Player[]) {
-                setPlayers([...players]);
-            },
-        });
+        setPresenceConnection(
+            new PresenceConnection({
+                myself: myself,
+                onChange(players: Player[]) {
+                    setPlayers([...players]);
+                },
+            })
+        );
 
         return () => {
-            connection.disconnect();
+            if (presenceConnection) {
+                presenceConnection.disconnect();
+            }
         };
     }, []);
 
@@ -60,6 +68,16 @@ function App() {
         setPage("name");
     }
 
+    function saveName(newName: string): void {
+        window.localStorage.setItem("name", newName);
+        setName(newName);
+        myself.name = newName;
+        if (presenceConnection) {
+            presenceConnection.updateMyself(myself);
+        }
+        setPage("players");
+    }
+
     // Needs a name, or wants to change name
 
     // Not yet connected
@@ -67,6 +85,8 @@ function App() {
     // Has a name and is connected
 
     switch (page) {
+        case "loading":
+            return "";
         case "players":
             return (
                 <PlayersPage
@@ -77,7 +97,7 @@ function App() {
                 />
             );
         case "name":
-            return <NamePage goToPage={setPage} currentName={name ?? ""} />;
+            return <NamePage saveName={saveName} currentName={name ?? ""} />;
         case "connect":
             return <ConnectPage goToPage={setPage} />;
         case "play":
