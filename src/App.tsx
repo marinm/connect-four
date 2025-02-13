@@ -1,23 +1,27 @@
-import { useState } from "react";
-import { useX } from "./hooks/useX";
+import { useEffect, useState } from "react";
+import PresenceConnection from "./logic/PresenceConnection";
+import { Player, PlayerStatus } from "./types/Player";
 import "./App.css";
 
 function App() {
-    const [p, setP] = useState<number>(0);
+    const myself: Player = {
+        id: "id",
+        name: "name",
+        status: PlayerStatus.Ready,
+    };
 
-    const x1 = useX({ p });
-    const x2 = useX({ p: p * 2 });
+    useEffect(() => {
+        const presenceConnection = new PresenceConnection({
+            myself,
+            onChange: (newPlayers: Player[]) => {},
+        });
+        return () => presenceConnection.disconnect();
+    }, []);
 
-    return (
-        <div>
-            <input
-                type="number"
-                value={p}
-                onChange={(e) => setP(parseInt(e.target.value))}
-            />
-            {x1}, {x2}
-        </div>
-    );
+    // connection callbacks need access to state inside component
+    // connection onopen should happen inside component
+
+    return <div></div>;
 }
 
 export default App;
