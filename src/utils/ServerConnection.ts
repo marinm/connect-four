@@ -21,7 +21,7 @@ export class ServerConnection<Message> {
         this.shouldClose = false;
         this.onOpen = options.onOpen;
         this.onMessage = options.onMessage;
-        this.onClose = this.onClose;
+        this.onClose = options.onClose;
         this.validateMessage = options.validateMessage;
 
         this.socket.onopen = () => {
