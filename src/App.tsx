@@ -20,6 +20,8 @@ function App() {
     return (
         <div>
             <button onClick={() => add()}>Add</button>
+            <br />
+            <br />
             <table>
                 <thead>
                     <tr>

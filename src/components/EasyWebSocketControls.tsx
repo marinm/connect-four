@@ -30,12 +30,34 @@ function readyStateLabel(readyState: null | number): string {
 export default function EasyWebSocketControls(options: Options) {
     const socket = useEasyWebSocket({ url: options.url, valid });
     return (
-        <div>
-            {socket.isOnline ? "online" : "offline"}
-            {readyStateLabel(socket.readyState)}
-            <button onClick={() => socket.open()}>Open</button>
-            <button onClick={() => socket.send({ type: "ping" })}>Ping</button>
-            <button onClick={() => socket.close()}>Close</button>
+        <div
+            style={{
+                display: "grid",
+                gap: "2ch",
+                alignItems: "center",
+                gridTemplateColumns: "repeat(5, 1fr)",
+            }}
+        >
+            <div>{socket.isOnline ? "online" : "offline"}</div>
+            <div>{readyStateLabel(socket.readyState)}</div>
+            <button
+                onClick={() => socket.open()}
+                disabled={socket.readyState != WebSocket.CLOSED}
+            >
+                Open
+            </button>
+            <button
+                onClick={() => socket.send({ type: "ping" })}
+                disabled={socket.readyState != WebSocket.OPEN}
+            >
+                Ping
+            </button>
+            <button
+                onClick={() => socket.close()}
+                disabled={socket.readyState != WebSocket.OPEN}
+            >
+                Close
+            </button>
         </div>
     );
 }

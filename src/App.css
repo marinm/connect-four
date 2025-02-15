@@ -91,6 +91,10 @@ button {
     padding: 0.1rem 0.3rem;
 }
 
+button:disabled {
+    opacity: 0.5;
+}
+
 .user-name-bar {
     width: 100%;
     display: flex;
@@ -126,4 +130,14 @@ button {
     > * {
         color: var(--bg-color);
     }
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td,
+th {
+    padding: 1ch;
+    border: 1px solid black;
 }
