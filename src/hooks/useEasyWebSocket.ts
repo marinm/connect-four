@@ -8,41 +8,51 @@ import { parseJSON } from "../utils/parseJSON";
 //   - validation: the message listener always receives a valid message
 //   - order safety: each method checks current state before running
 
-export type EasyWebSocketEvent<Message> = {
+// Valid JSON can be parsed into any of these types:
+//   - Object
+//   - Array
+//   - string
+//   - number
+//   - boolean
+//   - null
+// Allow only non-null objects.
+export type Message = NonNullable<object>;
+
+function isMessage(message: unknown): message is Message {
+    return message !== null && typeof message === "object";
+}
+
+export type EasyWebSocketEvent = {
     name: "open" | "message" | "close";
     message: null | Message;
 };
 
-type EventListener<Message> =
-    | (() => void)
-    | ((event: EasyWebSocketEvent<Message>) => void);
+type EventListener = (() => void) | ((event: EasyWebSocketEvent) => void);
 
-export type EasyWebSocket<Message> = {
+export type EasyWebSocket = {
     url: string;
     readyState: null | number;
     open: () => void;
     send: (message: Message) => void;
     close: () => void;
-    listen: (callback: EventListener<Message>) => void;
+    listen: (callback: EventListener) => void;
 };
 
-type Options<Message> = {
+type Options = {
     url: string;
-    isMessageType: (message: unknown) => message is Message;
+    valid: (message: Message) => boolean;
 };
 
-export function useEasyWebSocket<Message>(
-    options: Options<Message>
-): EasyWebSocket<Message> {
+export function useEasyWebSocket(options: Options): EasyWebSocket {
     const websocketRef = useRef<null | WebSocket>(null);
     let shouldClose: boolean = false;
-    let onEvent: EventListener<Message> = () => {};
+    let onEvent: EventListener = () => {};
 
     function reasonError(method: string, reason: string) {
         console.error(`ignoring ${method}() because ${reason}`);
     }
 
-    function emit(event: EasyWebSocketEvent<Message>) {
+    function emit(event: EasyWebSocketEvent) {
         console.log(event);
         onEvent(event);
     }
@@ -71,15 +81,7 @@ export function useEasyWebSocket<Message>(
 
         websocket.onmessage = (event) => {
             const message = parseJSON(event.data);
-            // Valid JSON can be parsed into any of these types:
-            //   - Object
-            //   - Array
-            //   - string
-            //   - number
-            //   - boolean
-            //   - null
-            // Allow everything except null.
-            if (message === null || !options.isMessageType(message)) {
+            if (!(isMessage(message) && options.valid(message))) {
                 console.log("🚫 invalid message received");
                 return;
             }
@@ -129,7 +131,7 @@ export function useEasyWebSocket<Message>(
         }
     }
 
-    function listen(callback: EventListener<Message>) {
+    function listen(callback: EventListener) {
         onEvent = callback;
     }
 
