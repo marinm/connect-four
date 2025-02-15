@@ -71,6 +71,14 @@ export function useEasyWebSocket<Message>(
 
         websocket.onmessage = (event) => {
             const message = parseJSON(event.data);
+            // Valid JSON can be parsed into any of these types:
+            //   - Object
+            //   - Array
+            //   - string
+            //   - number
+            //   - boolean
+            //   - null
+            // Allow everything except null.
             if (message === null || !options.isMessageType(message)) {
                 console.log("🚫 invalid message received");
                 return;
