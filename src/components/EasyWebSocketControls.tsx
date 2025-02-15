@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useEasyWebSocket, Message } from "../hooks/useEasyWebSocket";
 
 type Options = {
@@ -9,7 +10,9 @@ function valid(message: Message): boolean {
     return (
         "type" in message &&
         typeof message.type === "string" &&
-        ["ping"].includes(message.type)
+        ["ping"].includes(message.type) &&
+        "name" in message &&
+        typeof message.name === "string"
     );
 }
 
@@ -28,7 +31,20 @@ function readyStateLabel(readyState: null | number): string {
 }
 
 export default function EasyWebSocketControls(options: Options) {
+    const [recentFrom, setRecentFrom] = useState<string>("");
     const socket = useEasyWebSocket({ url: options.url, valid });
+
+    socket.listen((event) => {
+        console.log("heard event", event);
+        if (
+            event.name === "message" &&
+            event.message &&
+            "name" in event.message
+        ) {
+            setRecentFrom(String(event.message.name));
+        }
+    });
+
     return (
         <div
             style={{
@@ -47,7 +63,9 @@ export default function EasyWebSocketControls(options: Options) {
                 Open
             </button>
             <button
-                onClick={() => socket.send({ type: "ping" })}
+                onClick={() =>
+                    socket.send({ type: "ping", name: options.name })
+                }
                 disabled={socket.readyState != WebSocket.OPEN}
             >
                 Ping
@@ -58,6 +76,7 @@ export default function EasyWebSocketControls(options: Options) {
             >
                 Close
             </button>
+            <div>{recentFrom}</div>
         </div>
     );
 }
