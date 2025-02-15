@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { parseJSON } from "../utils/parseJSON";
 
 // Some of the benefits of this WebSocket wrapper:
@@ -31,6 +31,7 @@ type EventListener = (() => void) | ((event: EasyWebSocketEvent) => void);
 
 export type EasyWebSocket = {
     url: string;
+    isOnline: boolean;
     readyState: null | number;
     open: () => void;
     send: (message: Message) => void;
@@ -46,8 +47,30 @@ type Options = {
 export function useEasyWebSocket(options: Options): EasyWebSocket {
     const websocketRef = useRef<null | WebSocket>(null);
     const [readyState, setReadyState] = useState<number>(WebSocket.CLOSED);
+    const [isOnline, setIsOnline] = useState<boolean>(window.navigator.onLine);
     let shouldClose: boolean = false;
     let onEvent: EventListener = () => {};
+
+    useEffect(() => {
+        console.log("mounting");
+        const onOnline = () => {
+            console.log("✅ online");
+            setIsOnline(true);
+        };
+        const onOffline = () => {
+            console.log("❌ offline");
+            setIsOnline(false);
+        };
+
+        window.addEventListener("online", onOnline);
+        window.addEventListener("offline", onOffline);
+
+        return () => {
+            console.log("dismounting");
+            window.removeEventListener("online", onOnline);
+            window.removeEventListener("offline", onOffline);
+        };
+    }, []);
 
     function reasonError(method: string, reason: string) {
         console.error(`ignoring ${method}() because ${reason}`);
@@ -153,6 +176,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
 
     return {
         url: options.url,
+        isOnline,
         readyState,
         open,
         send,
