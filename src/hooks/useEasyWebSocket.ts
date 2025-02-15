@@ -53,7 +53,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
     }
 
     function emit(event: EasyWebSocketEvent) {
-        console.log(event);
+        console.log("EasyWebSocketEvent", event);
         onEvent(event);
     }
 
@@ -98,6 +98,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
                 name: "close",
                 message: null,
             });
+            websocketRef.current = null;
         };
 
         websocket.onerror = console.error;
@@ -124,11 +125,23 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
             return;
         }
 
+        if (
+            websocketRef.current.readyState === WebSocket.CLOSING ||
+            websocketRef.current.readyState === WebSocket.CLOSED
+        ) {
+            reasonError("close", "already closed");
+            return;
+        }
+
         if (websocketRef.current.readyState === WebSocket.OPEN) {
             websocketRef.current.close();
-        } else {
-            shouldClose = true;
+            return;
         }
+
+        // The only remaining possible state is WebSocket.CONNECTING, and
+        // WebSocket cannot close() while in this state. Wait until the "open"
+        // event to close this socket.
+        shouldClose = true;
     }
 
     function listen(callback: EventListener) {
