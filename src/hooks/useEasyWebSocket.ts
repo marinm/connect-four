@@ -48,7 +48,6 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
     const websocketRef = useRef<null | WebSocket>(null);
     const [readyState, setReadyState] = useState<number>(WebSocket.CLOSED);
     const [isOnline, setIsOnline] = useState<boolean>(window.navigator.onLine);
-    let shouldClose: boolean = false;
     let onEvent: EventListener = () => {};
 
     useEffect(() => {
@@ -87,17 +86,12 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
             return;
         }
         websocketRef.current = new WebSocket(options.url);
-        shouldClose = false;
 
         const websocket = websocketRef.current;
 
         websocket.onopen = () => {
             setReadyState(websocket.readyState);
             console.log("✅ Connected");
-            if (shouldClose) {
-                websocket.close();
-                return;
-            }
             emit({
                 name: "open",
                 message: null,
@@ -159,15 +153,17 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
             return;
         }
 
+        if (websocketRef.current.readyState === WebSocket.CONNECTING) {
+            reasonError("close", "connecting in progress");
+            return;
+        }
+
         if (websocketRef.current.readyState === WebSocket.OPEN) {
             websocketRef.current.close();
             return;
         }
 
-        // The only remaining possible state is WebSocket.CONNECTING, and
-        // WebSocket cannot close() while in this state. Wait until the "open"
-        // event to close this socket.
-        shouldClose = true;
+        reasonError("close", "uncaught readyState");
     }
 
     function listen(callback: EventListener) {
