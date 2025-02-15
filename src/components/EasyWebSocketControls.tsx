@@ -13,11 +13,26 @@ function valid(message: Message): boolean {
     );
 }
 
+function readyStateLabel(readyState: null | number): string {
+    switch (readyState) {
+        case WebSocket.CLOSED:
+            return "CLOSED";
+        case WebSocket.CLOSING:
+            return "CLOSING";
+        case WebSocket.CONNECTING:
+            return "CONNECTING";
+        case WebSocket.OPEN:
+            return "OPEN";
+    }
+    return "UNKNOWN";
+}
+
 export default function EasyWebSocketControls(options: Options) {
     const socket = useEasyWebSocket({ url: options.url, valid });
     return (
         <div>
-            EasyWebSocketControls {options.name}
+            EasyWebSocketControls {options.name} (
+            {readyStateLabel(socket.readyState)})
             <button onClick={() => socket.open()}>Open</button>
             <button onClick={() => socket.send({ type: "ping" })}>Ping</button>
             <button onClick={() => socket.close()}>Close</button>
