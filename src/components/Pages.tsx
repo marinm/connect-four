@@ -1,101 +1,12 @@
-import { useState, useEffect } from "react";
-import PlayersPage from "./PlayersPage";
-import { Player, PlayerStatus } from "../types/Player";
-import NamePage from "./NamePage";
-import ConnectPage from "./ConnectPage";
-import PlayPage from "./PlayPage";
-import ErrorPage from "./ErrorPage";
-import { randomDigits } from "../utils/randomDigits";
-import PresenceConnection from "../logic/PresenceConnection";
+import { useState } from "react";
 
 export function Pages() {
-    const [id, setId] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(true);
-    const [page, setPage] = useState<string>("loading");
-    const [name, setName] = useState<string>("");
-    const [players, setPlayers] = useState<Player[]>([]);
-    const [presenceConnection, setPresenceConnection] =
-        useState<null | PresenceConnection>(null);
-
-    if (loading) {
-        const storedName: string = window.localStorage.getItem("name") ?? "";
-        setName(storedName);
-
-        const storedId = window.localStorage.getItem("id");
-        const randomId = storedId ?? randomDigits(8);
-        setId(randomId);
-        if (storedId === null) {
-            window.localStorage.setItem("id", randomId);
-        }
-
-        setLoading(false);
-
-        setPage(storedName ? "players" : "name");
-    }
-
-    const myself: Player = {
-        id: id,
-        name: name,
-        status: PlayerStatus.Ready,
-    };
-
-    useEffect(() => {
-        setPresenceConnection(
-            new PresenceConnection({
-                myself: myself,
-                onChange(players: Player[]) {
-                    setPlayers([...players]);
-                },
-            })
-        );
-
-        return () => {
-            if (presenceConnection) {
-                presenceConnection.disconnect();
-            }
-        };
-    }, []);
-
-    function invite(player: Player): void {
-        const newGameChannel = randomDigits(8);
-        console.log(
-            `invite player ${player.id} (${player.name}) on channel ${newGameChannel}`
-        );
-    }
-
-    function changeName() {
-        setPage("name");
-    }
-
-    function saveName(newName: string): void {
-        window.localStorage.setItem("name", newName);
-        setName(newName);
-        myself.name = newName;
-        if (presenceConnection) {
-            presenceConnection.updateMyself(myself);
-        }
-        setPage("players");
-    }
+    const [page] = useState<string>("start");
 
     switch (page) {
-        case "loading":
-            return "Loading...";
-        case "players":
-            return (
-                <PlayersPage
-                    myself={myself}
-                    players={players}
-                    invite={invite}
-                    changeName={changeName}
-                />
-            );
-        case "name":
-            return <NamePage saveName={saveName} currentName={name ?? ""} />;
-        case "connect":
-            return <ConnectPage goToPage={setPage} />;
-        case "play":
-            return <PlayPage goToPage={setPage} />;
+        case "start":
+            return "Starting...";
     }
 
-    return <ErrorPage goToPage={setPage} />;
+    return "Error";
 }
