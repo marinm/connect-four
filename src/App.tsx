@@ -5,7 +5,11 @@ import { useState } from "react";
 
 function App() {
     const [names, setNames] = useState<string[]>([]);
-    const channel = randomDigits(8);
+    const [channel, setChannel] = useState<string>("");
+
+    if (!channel) {
+        setChannel(randomDigits(8));
+    }
 
     const broadcastURL = `https://marinm.net/broadcast?channel=${channel}`;
 
@@ -25,6 +29,7 @@ function App() {
             <table>
                 <thead>
                     <tr>
+                        <th>Channel</th>
                         <th>Name</th>
                         <th>Controls</th>
                         <th>Remove</th>
@@ -33,6 +38,7 @@ function App() {
                 <tbody>
                     {names.map((name) => (
                         <tr key={name}>
+                            <td>{channel}</td>
                             <td>{name}</td>
                             <td>
                                 <EasyWebSocketControls
