@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { SocketContext } from "../contexts/SocketContext";
 import { randomName } from "../utils/randomName";
+import ConnectPage from "./ConnectPage";
 
 export function Pages() {
     const socket = useContext(SocketContext);
@@ -12,6 +13,10 @@ export function Pages() {
 
     if (!socket.isOnline) {
         return "No internet connection";
+    }
+
+    if (socket.readyState != WebSocket.OPEN) {
+        return <ConnectPage />;
     }
 
     console.log("online as " + name);
