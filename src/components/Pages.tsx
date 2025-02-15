@@ -1,14 +1,22 @@
 import { useContext, useState } from "react";
 import { SocketContext } from "../contexts/SocketContext";
+import NamePage from "./NamePage";
 
 export function Pages() {
-    const [page] = useState<string>("start");
     const socket = useContext(SocketContext);
+    const [name, setName] = useState<string>("");
 
-    switch (page) {
-        case "start":
-            return "Starting... url: " + socket?.url;
+    if (socket === null) {
+        return "";
     }
 
-    return "Error";
+    if (!socket.isOnline) {
+        return "No internet connection";
+    }
+
+    if (!name) {
+        return <NamePage currentName={name} setName={setName} />;
+    }
+
+    return "Playing as " + name;
 }

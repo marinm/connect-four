@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from "react";
 
 type PropType = {
     currentName: string;
-    saveName: (name: string) => void;
+    setName: (name: string) => void;
 };
 
-export default function NamePage({ currentName, saveName }: PropType) {
-    const [name, setName] = useState<string>(currentName);
+export default function NamePage({ currentName, setName }: PropType) {
+    const [value, setValue] = useState<string>(currentName);
     const inputRef = useRef<HTMLInputElement>(null);
 
     function setSanitizedName(input: string): void {
@@ -18,22 +18,22 @@ export default function NamePage({ currentName, saveName }: PropType) {
             .split("")
             .filter((c) => validChars.includes(c))
             .join("");
-        setName(sanitized);
+        setValue(sanitized);
     }
 
     function trySave() {
-        if (!name) {
+        if (!value) {
             return;
         }
 
-        saveName(name);
+        setName(value);
     }
 
     useEffect(() => {
         if (inputRef.current != null) {
             inputRef.current.focus();
         }
-    }, [inputRef.current]);
+    }, []);
 
     return (
         <div className="page">
@@ -42,7 +42,7 @@ export default function NamePage({ currentName, saveName }: PropType) {
                 type="text"
                 ref={inputRef}
                 autoComplete="off"
-                value={name}
+                value={value}
                 onChange={(event) => setSanitizedName(event.target.value)}
             />
             <button type="button" onClick={trySave}>
