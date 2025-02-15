@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
 import { SocketContext } from "../contexts/SocketContext";
-import NamePage from "./NamePage";
+import { randomName } from "../utils/randomName";
 
 export function Pages() {
     const socket = useContext(SocketContext);
-    const [name, setName] = useState<string>("");
+    const [name] = useState<string>(randomName());
 
     if (socket === null) {
         return "";
@@ -14,9 +14,7 @@ export function Pages() {
         return "No internet connection";
     }
 
-    if (!name) {
-        return <NamePage currentName={name} setName={setName} />;
-    }
+    console.log("online as " + name);
 
     return "Playing as " + name;
 }
