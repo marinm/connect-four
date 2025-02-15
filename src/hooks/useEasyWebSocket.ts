@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { parseJSON } from "../utils/parseJSON";
 
 // Some of the benefits of this WebSocket wrapper:
@@ -45,6 +45,7 @@ type Options = {
 
 export function useEasyWebSocket(options: Options): EasyWebSocket {
     const websocketRef = useRef<null | WebSocket>(null);
+    const [readyState, setReadyState] = useState<number>(WebSocket.CLOSED);
     let shouldClose: boolean = false;
     let onEvent: EventListener = () => {};
 
@@ -68,6 +69,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
         const websocket = websocketRef.current;
 
         websocket.onopen = () => {
+            setReadyState(websocket.readyState);
             console.log("✅ Connected");
             if (shouldClose) {
                 websocket.close();
@@ -93,6 +95,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
         };
 
         websocket.onclose = () => {
+            setReadyState(websocket.readyState);
             console.log("❌ Disconnected");
             emit({
                 name: "close",
@@ -150,7 +153,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
 
     return {
         url: options.url,
-        readyState: websocketRef.current?.readyState ?? null,
+        readyState,
         open,
         send,
         close,
