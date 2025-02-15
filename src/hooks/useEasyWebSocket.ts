@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { parseJSON } from "../utils/parseJSON";
 
 // Some of the benefits of this WebSocket wrapper:
@@ -50,37 +50,16 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
     const [isOnline, setIsOnline] = useState<boolean>(window.navigator.onLine);
     let onEvent: EventListener = () => {};
 
-    useEffect(() => {
-        console.log("add online listener");
-        const onOnline = () => {
-            console.log("✅ online");
-            setIsOnline(true);
-        };
-        const onOffline = () => {
-            console.log("❌ offline");
-            setIsOnline(false);
-        };
-
-        window.addEventListener("online", onOnline);
-        window.addEventListener("offline", onOffline);
-
-        return () => {
-            console.log("remove online listener");
-            window.removeEventListener("online", onOnline);
-            window.removeEventListener("offline", onOffline);
-        };
-    }, []);
-
     function reasonError(method: string, reason: string) {
         console.log(`ignoring ${method}() because ${reason}`);
     }
 
-    function emit(event: EasyWebSocketEvent) {
+    const emit = useCallback((event: EasyWebSocketEvent) => {
         console.log("EasyWebSocketEvent", event);
         onEvent(event);
-    }
+    }, []);
 
-    function open() {
+    const open = useCallback(() => {
         if (websocketRef.current !== null) {
             reasonError("open", "already open");
             return;
@@ -122,9 +101,9 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
         };
 
         websocket.onerror = console.error;
-    }
+    }, [options, emit]);
 
-    function send(message: Message): void {
+    const send = useCallback((message: Message) => {
         if (websocketRef.current === null) {
             if (websocketRef.current === null) {
                 reasonError("send", "closed");
@@ -137,9 +116,9 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
             return;
         }
         websocketRef.current.send(JSON.stringify(message));
-    }
+    }, []);
 
-    function close() {
+    const close = useCallback(() => {
         if (websocketRef.current === null) {
             reasonError("close", "already closed");
             return;
@@ -164,11 +143,33 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
         }
 
         reasonError("close", "uncaught readyState");
-    }
+    }, []);
 
     function listen(callback: EventListener) {
         onEvent = callback;
     }
+
+    useEffect(() => {
+        console.log("add online listener");
+        const onOnline = () => {
+            console.log("✅ online");
+            setIsOnline(true);
+        };
+        const onOffline = () => {
+            console.log("❌ offline");
+            setIsOnline(false);
+        };
+
+        window.addEventListener("online", onOnline);
+        window.addEventListener("offline", onOffline);
+
+        return () => {
+            close();
+            console.log("remove online listener");
+            window.removeEventListener("online", onOnline);
+            window.removeEventListener("offline", onOffline);
+        };
+    }, [close]);
 
     return {
         url: options.url,
