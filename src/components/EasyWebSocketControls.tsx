@@ -31,8 +31,8 @@ export default function EasyWebSocketControls(options: Options) {
     const socket = useEasyWebSocket({ url: options.url, valid });
     return (
         <div>
-            {options.name} {socket.isOnline ? "online" : "offline"} (
-            {readyStateLabel(socket.readyState)})
+            {socket.isOnline ? "online" : "offline"}
+            {readyStateLabel(socket.readyState)}
             <button onClick={() => socket.open()}>Open</button>
             <button onClick={() => socket.send({ type: "ping" })}>Ping</button>
             <button onClick={() => socket.close()}>Close</button>

@@ -52,7 +52,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
     let onEvent: EventListener = () => {};
 
     useEffect(() => {
-        console.log("mounting");
+        console.log("add online listener");
         const onOnline = () => {
             console.log("✅ online");
             setIsOnline(true);
@@ -66,7 +66,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
         window.addEventListener("offline", onOffline);
 
         return () => {
-            console.log("dismounting");
+            console.log("remove online listener");
             window.removeEventListener("online", onOnline);
             window.removeEventListener("offline", onOffline);
         };
