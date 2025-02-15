@@ -73,7 +73,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
     }, []);
 
     function reasonError(method: string, reason: string) {
-        console.error(`ignoring ${method}() because ${reason}`);
+        console.log(`ignoring ${method}() because ${reason}`);
     }
 
     function emit(event: EasyWebSocketEvent) {
