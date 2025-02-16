@@ -33,22 +33,18 @@ export function useRoom(): Room {
         socket.send({ name: myself });
     }
 
+    function onEvent(event: EasyWebSocketEvent) {
+        console.log("room: event", event);
+
+        if (event.name === "open") {
+            console.log("room: socket open");
+            announceMyself();
+        }
+    }
+
     function join() {
-        socket.listen((event) => {
-            console.log(event);
-        });
-
         setMyself(randomName());
-
-        socket.listen((event: EasyWebSocketEvent) => {
-            console.log("room: event", event);
-
-            if (event.name === "open") {
-                console.log("room: socket open");
-                announceMyself();
-            }
-        });
-
+        socket.listen(onEvent);
         socket.open();
     }
 
