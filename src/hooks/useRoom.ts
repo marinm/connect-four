@@ -29,7 +29,8 @@ export function useRoom(): Room {
     }
 
     function announceMyself() {
-        socket.send({});
+        console.log("room: announceMyself");
+        socket.send({ name: myself });
     }
 
     function join() {
@@ -40,11 +41,15 @@ export function useRoom(): Room {
         setMyself(randomName());
 
         socket.listen((event: EasyWebSocketEvent) => {
-            console.log(event);
+            console.log("room: event", event);
+
+            if (event.name === "open") {
+                console.log("room: socket open");
+                announceMyself();
+            }
         });
 
         socket.open();
-        announceMyself();
     }
 
     return {
