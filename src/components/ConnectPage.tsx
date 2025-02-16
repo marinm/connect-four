@@ -1,12 +1,12 @@
 import { useContext } from "react";
-import { SocketContext } from "../contexts/SocketContext";
+import { RoomContext } from "../contexts/RoomContext";
 
 export default function ConnectPage() {
-    const socket = useContext(SocketContext);
+    const room = useContext(RoomContext);
 
     return (
         <div className="page">
-            <button onClick={() => socket?.open()}>Connect</button>
+            <button onClick={() => room?.join()}>Connect</button>
         </div>
     );
 }

@@ -1,25 +1,24 @@
 import { useContext, useState } from "react";
-import { SocketContext } from "../contexts/SocketContext";
+import { RoomContext } from "../contexts/RoomContext";
 import { randomName } from "../utils/randomName";
 import ConnectPage from "./ConnectPage";
+import PlayersPage from "./PlayersPage";
 
 export function Pages() {
-    const socket = useContext(SocketContext);
+    const room = useContext(RoomContext);
     const [name] = useState<string>(randomName());
 
-    if (socket === null) {
+    if (room === null) {
         return "";
     }
 
-    if (!socket.isOnline) {
+    if (!room.socket.isOnline) {
         return "No internet connection";
     }
 
-    if (socket.readyState != WebSocket.OPEN) {
+    if (room.socket.readyState != WebSocket.OPEN) {
         return <ConnectPage />;
     }
 
-    console.log("online as " + name);
-
-    return "Playing as " + name;
+    return <PlayersPage myName={name} players={[]} invite={room.invite} />;
 }
