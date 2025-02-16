@@ -1,20 +1,28 @@
-import { EasyWebSocket, useEasyWebSocket } from "./useEasyWebSocket";
+import {
+    EasyWebSocket,
+    EasyWebSocketEvent,
+    useEasyWebSocket,
+} from "./useEasyWebSocket";
 import { useState } from "react";
-import { valid } from "../logic/valid";
 import { randomName } from "../utils/randomName";
+import { Message } from "./useEasyWebSocket";
 
 const SERVER_URL = "https://marinm.net/broadcast?channel=connect-four";
 
 export type Room = {
     socket: EasyWebSocket;
-    name: string;
+    myself: string;
     join: (as: string) => void;
     invite: (player: string) => void;
 };
 
+function valid(message: Message) {
+    return "name" in message && typeof message.name === "string";
+}
+
 export function useRoom(): Room {
     const socket = useEasyWebSocket({ url: SERVER_URL, valid });
-    const [name, setName] = useState<string>("");
+    const [myself, setMyself] = useState<string>("");
 
     function invite(player: string) {
         console.log(`invite ${player}`);
@@ -29,7 +37,11 @@ export function useRoom(): Room {
             console.log(event);
         });
 
-        setName(randomName());
+        setMyself(randomName());
+
+        socket.listen((event: EasyWebSocketEvent) => {
+            console.log(event);
+        });
 
         socket.open();
         announceMyself();
@@ -37,7 +49,7 @@ export function useRoom(): Room {
 
     return {
         socket,
-        name,
+        myself,
         join,
         invite,
     };

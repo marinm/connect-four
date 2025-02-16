@@ -18,5 +18,7 @@ export function Pages() {
         return <ConnectPage />;
     }
 
-    return <PlayersPage myName={room.name} players={[]} invite={room.invite} />;
+    return (
+        <PlayersPage myself={room.myself} players={[]} invite={room.invite} />
+    );
 }
