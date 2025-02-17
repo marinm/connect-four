@@ -1,9 +1,14 @@
 import { useContext } from "react";
 import { RoomContext } from "../contexts/RoomContext";
-import PlayersPage from "./PlayersPage";
+
+function invite(name: string) {
+    console.log(`invite ${name}`);
+}
 
 export function Pages() {
     const room = useContext(RoomContext);
+    const myself = "my-name";
+    const players: string[] = [];
 
     if (room === null) {
         return "";
@@ -16,12 +21,24 @@ export function Pages() {
     if (room.socket.readyState != WebSocket.OPEN) {
         return (
             <div className="page">
-                <button onClick={() => room?.join("my-name")}>Connect</button>
+                <button onClick={() => room?.join(myself)}>Connect</button>
             </div>
         );
     }
 
     return (
-        <PlayersPage myself={room.myself} players={[]} invite={room.invite} />
+        <div className="page">
+            <h1 className="inverted">Connect Four</h1>
+            <div className="online-list">
+                {myself} (myself)
+                <ul>
+                    {players.map((player) => (
+                        <li onClick={() => invite(player)} key={player}>
+                            <div>{player}</div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
     );
 }
