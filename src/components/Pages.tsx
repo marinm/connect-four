@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { RoomContext } from "../contexts/RoomContext";
+// import GameGrid from "./GameGrid";
 
 function invite(name: string) {
     console.log(`invite ${name}`);
@@ -41,4 +42,10 @@ export function Pages() {
             </div>
         </div>
     );
+
+    // return (
+    //     <div className="page">
+    //         <GameGrid />
+    //     </div>
+    // );
 }
