@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { RoomContext } from "../contexts/RoomContext";
-import ConnectPage from "./ConnectPage";
 import PlayersPage from "./PlayersPage";
 
 export function Pages() {
@@ -15,7 +14,11 @@ export function Pages() {
     }
 
     if (room.socket.readyState != WebSocket.OPEN) {
-        return <ConnectPage />;
+        return (
+            <div className="page">
+                <button onClick={() => room?.join("my-name")}>Connect</button>
+            </div>
+        );
     }
 
     return (
