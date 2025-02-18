@@ -12,14 +12,7 @@ import { randomName } from "./utils/randomName";
 
 function App() {
     const room = useRoom();
-    const myselfRef = useRef("");
     // const players: string[] = [];
-
-    if (myselfRef.current === "") {
-        myselfRef.current = randomName();
-    }
-
-    const myself = myselfRef.current;
 
     if (room === null) {
         return "";
@@ -32,7 +25,7 @@ function App() {
     if (room.socket.readyState === WebSocket.CLOSED) {
         return (
             <div className="page">
-                <button onClick={() => room.join(myself)}>Connect</button>
+                <button onClick={() => room.join()}>Connect</button>
                 <div>{room.socket.error ? "There was an error" : ""}</div>
             </div>
         );
@@ -53,7 +46,7 @@ function App() {
     return (
         <div>
             <div>Connected!</div>
-            <div>Playing as {myself}</div>
+            <div>Playing as {room.myself}</div>
         </div>
     );
 
