@@ -12,8 +12,8 @@ export default function GridSlot(props: Props) {
     });
 
     const tokenClasses = classes({
-        "player-1": props.value === 0,
-        "player-2": props.value === 1,
+        "player-0": props.value === 0,
+        "player-1": props.value === 1,
     });
 
     return (
