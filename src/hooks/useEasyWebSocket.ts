@@ -50,16 +50,15 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
     const [readyState, setReadyState] = useState<number>(WebSocket.CLOSED);
     const [isOnline, setIsOnline] = useState<boolean>(window.navigator.onLine);
     const [error, setError] = useState<boolean>(false);
-    let onEvent: EventListener = () => {};
+    const onEventRef = useRef<EventListener>(() => {});
 
     function reasonError(method: string, reason: string) {
         console.log(`ignoring ${method}() because ${reason}`);
     }
 
-    const emit = useCallback((event: EasyWebSocketEvent) => {
-        console.log("EasyWebSocketEvent", event);
-        onEvent(event);
-    }, []);
+    function emit(event: EasyWebSocketEvent) {
+        onEventRef.current(event);
+    }
 
     const open = useCallback(() => {
         if (websocketRef.current !== null) {
@@ -107,7 +106,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
             console.log(err);
             setError(true);
         };
-    }, [options, emit]);
+    }, [options]);
 
     const send = useCallback((message: Message) => {
         if (websocketRef.current === null) {
@@ -152,7 +151,8 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
     }, []);
 
     function listen(callback: EventListener) {
-        onEvent = callback;
+        console.log("update onEvent");
+        onEventRef.current = callback;
     }
 
     useEffect(() => {
