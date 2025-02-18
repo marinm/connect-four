@@ -9,6 +9,7 @@ export type Game = {
     turn: number;
     four: Position[];
     drop: (col: number) => void;
+    positionAt: (index: number) => Position;
 };
 
 // The grid, and whose turn it is, and if there's 4 connected
@@ -160,5 +161,6 @@ export function useGame(): Game {
         turn,
         four,
         drop,
+        positionAt,
     };
 }

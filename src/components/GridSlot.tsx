@@ -1,11 +1,9 @@
 import { classes } from "../utils/classes";
 
 type Props = {
-    row: number;
-    col: number;
     value: number;
-    select: (row: number, col: number) => void;
     connected: boolean;
+    select: () => void;
 };
 
 export default function GridSlot(props: Props) {
@@ -21,10 +19,7 @@ export default function GridSlot(props: Props) {
     });
 
     return (
-        <div
-            className={slotClasses}
-            onClick={() => props.select(props.row, props.col)}
-        >
+        <div className={slotClasses} onClick={() => props.select()}>
             <div className={tokenClasses}></div>
         </div>
     );

@@ -7,16 +7,17 @@ export function GameGrid() {
     return (
         <div className="page">
             <div className="game-grid">
-                {game.grid.map((slot, index) => (
-                    <GridSlot
-                        key={index}
-                        row={index}
-                        col={index}
-                        value={slot}
-                        select={() => game.drop(index)}
-                        connected={game.four.includes()}
-                    />
-                ))}
+                {game.grid.map((value, index) => {
+                    const position = game.positionAt(index);
+                    return (
+                        <GridSlot
+                            key={index}
+                            value={value}
+                            select={() => game.drop(position.j)}
+                            connected={game.four.includes(position)}
+                        />
+                    );
+                })}
             </div>
             Turn: {game.turn}
         </div>
