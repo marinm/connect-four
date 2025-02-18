@@ -33,6 +33,7 @@ export type EasyWebSocket = {
     url: string;
     isOnline: boolean;
     readyState: null | number;
+    error: boolean;
     open: () => void;
     send: (message: Message) => void;
     close: () => void;
@@ -48,6 +49,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
     const websocketRef = useRef<null | WebSocket>(null);
     const [readyState, setReadyState] = useState<number>(WebSocket.CLOSED);
     const [isOnline, setIsOnline] = useState<boolean>(window.navigator.onLine);
+    const [error, setError] = useState<boolean>(false);
     let onEvent: EventListener = () => {};
 
     function reasonError(method: string, reason: string) {
@@ -70,6 +72,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
 
         websocket.onopen = () => {
             setReadyState(websocket.readyState);
+            setError(false);
             console.log("✅ Connected");
             emit({
                 name: "open",
@@ -100,7 +103,10 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
             websocketRef.current = null;
         };
 
-        websocket.onerror = console.error;
+        websocket.onerror = (err) => {
+            console.log(err);
+            setError(true);
+        };
     }, [options, emit]);
 
     const send = useCallback((message: Message) => {
@@ -175,6 +181,7 @@ export function useEasyWebSocket(options: Options): EasyWebSocket {
         url: options.url,
         isOnline,
         readyState,
+        error,
         open,
         send,
         close,
