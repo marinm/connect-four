@@ -1,5 +1,7 @@
 import "./App.css";
+import { useRef } from "react";
 import { useRoom } from "./hooks/useRoom";
+import { randomName } from "./utils/randomName";
 
 // function invite(name: string) {
 //     return `invite ${name}`;
@@ -10,8 +12,14 @@ import { useRoom } from "./hooks/useRoom";
 
 function App() {
     const room = useRoom();
-    const myself = "my-name";
+    const myselfRef = useRef("");
     // const players: string[] = [];
+
+    if (myselfRef.current === "") {
+        myselfRef.current = randomName();
+    }
+
+    const myself = myselfRef.current;
 
     if (room === null) {
         return "";
