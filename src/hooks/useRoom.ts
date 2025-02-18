@@ -3,7 +3,7 @@ import {
     EasyWebSocketEvent,
     useEasyWebSocket,
 } from "./useEasyWebSocket";
-import { useEffect, useState } from "react";
+import { useCallback, useRef } from "react";
 import { randomName } from "../utils/randomName";
 import { Message } from "./useEasyWebSocket";
 
@@ -22,31 +22,30 @@ function valid(message: Message) {
 
 export function useRoom(): Room {
     const socket = useEasyWebSocket({ url: SERVER_URL, valid });
-    const [myself, setMyself] = useState("");
+    const myselfRef = useRef("");
 
     function invite(player: string) {
         console.log(`invite ${player}`);
     }
 
-    function announceMyself() {
-        socket.send({ name: myself });
-    }
-
-    function onEvent(event: EasyWebSocketEvent) {
-        if (event.name === "open") {
-            announceMyself();
-        }
-    }
+    const onEvent = useCallback(
+        (event: EasyWebSocketEvent) => {
+            if (event.name === "open") {
+                socket.send({ name: myselfRef.current });
+            }
+        },
+        [socket]
+    );
 
     function join() {
-        setMyself(randomName());
+        myselfRef.current = randomName();
         socket.listen(onEvent);
         socket.open();
     }
 
     return {
         socket,
-        myself,
+        myself: myselfRef.current,
         join,
         invite,
     };
