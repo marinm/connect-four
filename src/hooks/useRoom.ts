@@ -74,6 +74,7 @@ export function useRoom(): Room {
 
     const onEvent = useCallback(
         (event: EasyWebSocketEvent) => {
+            // Both players introduce themselves once with a "hello"
             if (event.name === "open") {
                 socket.send({ id: myId, type: "hello" });
                 return;
@@ -82,13 +83,20 @@ export function useRoom(): Room {
                 setReady(false);
                 return;
             }
+            // When I get a "hello" from my friend, I know we are both online.
+            // But my friend may not have received my hello if they joined after
+            // me, so I reply with a "ready" to let them both that I am already
+            // online and that I got their hello. I am ready to play.
             if (isHelloMessage(event)) {
                 const message = event.message;
                 if (message.id !== myId && message.id === friendIdRef.current) {
                     socket.send({ id: myId, type: "ready" });
+                    setReady(true);
                 }
                 return;
             }
+            // When I get a "ready" from my friend, I know they got my hello and
+            // that we are both online. I am ready to play.
             if (isReadyMessage(event)) {
                 const message = event.message;
                 if (message.id !== myId && message.id === friendIdRef.current) {
