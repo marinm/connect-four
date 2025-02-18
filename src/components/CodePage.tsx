@@ -31,47 +31,121 @@ export function CodePage({ room }: Props) {
 
     return (
         <div className="page">
-            <div id="screen-code-input" className="screen">
-                Your code
+            <div
+                style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "1ch",
+                }}
+            >
+                <div style={{ display: "flex", gap: "2ch" }}>
+                    <div
+                        style={{
+                            border: "0.2ch solid #FFD36A",
+                            outline: "0.2ch solid #994F11",
+                            borderRadius: "0.5ch",
+                            overflow: "hidden",
+                        }}
+                    >
+                        <div
+                            style={{
+                                fontSize: "0.5rem",
+                                textAlign: "center",
+                                backgroundColor: "#994F11",
+                                color: "#FFF9EC",
+                                padding: "0.5ch",
+                                borderBottom: "0.5ch solid #FFD873",
+                            }}
+                        >
+                            MY CODE
+                        </div>
+                        <div
+                            style={{
+                                backgroundColor: "#FFF9EC",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "fit-content",
+                                padding: "1ch",
+                                textAlign: "center",
+                            }}
+                        >
+                            {positions.map((n) => (
+                                <div key={n}>{room.myId[n]}</div>
+                            ))}
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            border: "0.2ch solid #FFD36A",
+                            outline: "0.2ch solid #994F11",
+                            borderRadius: "0.5ch",
+                            overflow: "hidden",
+                        }}
+                    >
+                        <div
+                            style={{
+                                fontSize: "0.5rem",
+                                textAlign: "center",
+                                backgroundColor: "#994F11",
+                                color: "#FFF9EC",
+                                padding: "0.5ch",
+                                borderBottom: "0.5ch solid #FFD873",
+                            }}
+                        >
+                            FRIEND
+                        </div>
+                        <div
+                            style={{
+                                backgroundColor: "#FFF9EC",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "fit-content",
+                                padding: "1ch",
+                                textAlign: "center",
+                            }}
+                        >
+                            {positions.map((n) => (
+                                <div
+                                    key={n}
+                                    className={classes({
+                                        inverted: position === n,
+                                    })}
+                                    onClick={() => setPosition(n)}
+                                >
+                                    {friendCode[n]}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
                 <div
                     style={{
-                        backgroundColor: "#FFF9EC",
-                        border: "0.2ch solid #FFD36A",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        display: "grid",
+                        gridTemplateColumns: "repeat(5, 1fr)",
+                        gridTemplateRows: "1fr 1fr",
+                        gap: "0.3rem",
                         width: "90%",
-                        padding: "1ch",
-                        textAlign: "center",
-                        borderRadius: "1ch",
-                        outline: "0.2ch solid #994F11",
+                        maxWidth: "10cm",
                     }}
                 >
-                    {positions.map((n) => (
-                        <div key={n}>{room.myId[n]}</div>
-                    ))}
-                </div>
-                <div>Enter friend's code</div>
-                <div id="friend-code">
-                    {positions.map((n) => (
-                        <div
-                            key={n}
-                            className={classes({
-                                digit: true,
-                                inverted: position === n,
-                            })}
-                            onClick={() => setPosition(n)}
-                        >
-                            {friendCode[n]}
-                        </div>
-                    ))}
-                </div>
-                <div className="keypad">
                     {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
                         <button
                             key={n}
-                            className="keypad-btn"
                             onClick={() => enterNumber(n)}
+                            style={{
+                                fontSize: "1rem",
+                                backgroundColor: "transparent",
+                                borderRadius: "0.2rem",
+                                borderWidth: "0.1rem 0.1rem 0.2rem 0.1rem",
+                                aspectRatio: "1",
+                                padding: "0",
+                                margin: "0",
+                            }}
                         >
                             {n}
                         </button>

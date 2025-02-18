@@ -3,13 +3,6 @@ import { CodePage } from "./components/CodePage";
 import { GameGrid } from "./components/GameGrid";
 import { useRoom } from "./hooks/useRoom";
 
-// function invite(name: string) {
-//     return `invite ${name}`;
-// }
-
-// Check the internet connection
-// Check the server connection
-
 function App() {
     const room = useRoom();
 
@@ -21,9 +14,12 @@ function App() {
         return <div className="page">No internet connection</div>;
     }
 
-    if (room.socket.readyState === WebSocket.CLOSED) {
-        return <CodePage room={room} />;
-    }
+    return (
+        <div className="page">
+            <CodePage room={room} />
+            <GameGrid room={room} />
+        </div>
+    );
 
     if (room.socket.readyState === WebSocket.CONNECTING) {
         return <div className="page">Connecting...</div>;
@@ -41,12 +37,6 @@ function App() {
     if (!room.ready) {
         return <div className="page">Waiting for friend...</div>;
     }
-
-    return (
-        <div className="page">
-            <GameGrid room={room} />
-        </div>
-    );
 }
 
 export default App;
