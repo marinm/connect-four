@@ -29,17 +29,26 @@ export function CodePage({ room }: Props) {
         .fill(0)
         .map((_, i) => i);
 
-    console.log(positions);
-
     return (
         <div className="page">
             <div id="screen-code-input" className="screen">
                 Your code
-                <div id="own-code">
+                <div
+                    style={{
+                        backgroundColor: "#FFF9EC",
+                        border: "0.2ch solid #FFD36A",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "90%",
+                        padding: "1ch",
+                        textAlign: "center",
+                        borderRadius: "1ch",
+                        outline: "0.2ch solid #994F11",
+                    }}
+                >
                     {positions.map((n) => (
-                        <div key={n} className="digit">
-                            {room.myId[n]}
-                        </div>
+                        <div key={n}>{room.myId[n]}</div>
                     ))}
                 </div>
                 <div>Enter friend's code</div>
@@ -69,10 +78,18 @@ export function CodePage({ room }: Props) {
                     ))}
                 </div>
                 <button
-                    id="connect-btn"
                     onClick={() => room.join(friendCode.join(""))}
+                    style={{
+                        fontSize: "0.8rem",
+                        backgroundColor: "#e49d53",
+                        border: "0.3ch solid #994F11",
+                        borderRadius: "0.7ch",
+                        color: "#fff7e0",
+                        fontWeight: "bold",
+                        padding: "0.5ch 1ch",
+                    }}
                 >
-                    CONNECT
+                    PAIR
                 </button>
             </div>
         </div>
