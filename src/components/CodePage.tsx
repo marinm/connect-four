@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { randomDigits } from "../utils/randomDigits";
 import { classes } from "../utils/classes";
 import { Room } from "../hooks/useRoom";
 
@@ -10,7 +9,6 @@ type Props = {
 export function CodePage({ room }: Props) {
     const [position, setPosition] = useState(0);
     const [friendCode, setFriendCode] = useState<number[]>([0, 0, 0, 0]);
-    const myCode = randomDigits(4);
 
     function enterNumber(n: number) {
         friendCode[position] = n;
@@ -20,10 +18,6 @@ export function CodePage({ room }: Props) {
         setPosition(position === 3 ? 3 : (position + 1) % 4);
     }
 
-    function connect() {
-        room.join(myCode, friendCode.join(""));
-    }
-
     return (
         <div className="page">
             <div id="screen-code-input" className="screen">
@@ -31,7 +25,7 @@ export function CodePage({ room }: Props) {
                 <div id="own-code">
                     {[0, 1, 2, 3].map((n) => (
                         <div key={n} className="digit">
-                            {myCode[n]}
+                            {room.myId[n]}
                         </div>
                     ))}
                 </div>
@@ -61,7 +55,10 @@ export function CodePage({ room }: Props) {
                         </button>
                     ))}
                 </div>
-                <button id="connect-btn" onClick={() => connect()}>
+                <button
+                    id="connect-btn"
+                    onClick={() => room.join(friendCode.join(""))}
+                >
                     CONNECT
                 </button>
             </div>

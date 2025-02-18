@@ -3,14 +3,16 @@ import {
     EasyWebSocketEvent,
     useEasyWebSocket,
 } from "./useEasyWebSocket";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Message } from "./useEasyWebSocket";
+import { randomDigits } from "../utils/randomDigits";
 
 const SERVER_URL = "https://marinm.net/broadcast";
 
 export type Room = {
+    myId: string;
     socket: EasyWebSocket;
-    join: (myId: string, friendId: string) => void;
+    join: (friendId: string) => void;
 };
 
 function valid(message: Message) {
@@ -34,6 +36,11 @@ export function useRoom(): Room {
     const socket = useEasyWebSocket({ valid });
     const myIdRef = useRef("");
     const friendIdRef = useRef("");
+    const [myId, setMyId] = useState("    ");
+
+    useEffect(() => {
+        setMyId(randomDigits(4));
+    }, []);
 
     const onEvent = useCallback(
         (event: EasyWebSocketEvent) => {
@@ -49,8 +56,7 @@ export function useRoom(): Room {
         [socket]
     );
 
-    function join(myId: string, friendId: string) {
-        myIdRef.current = myId;
+    function join(friendId: string) {
         friendIdRef.current = friendId;
         const channel = myId < friendId ? myId + friendId : friendId + myId;
         const url = `${SERVER_URL}?channel=${channel}`;
@@ -60,6 +66,7 @@ export function useRoom(): Room {
     }
 
     return {
+        myId,
         socket,
         join,
     };
