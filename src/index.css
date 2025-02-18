@@ -6,7 +6,7 @@ html {
 
 * {
     box-sizing: border-box;
-    font-family: "VT323";
+    font-family: "Nunito";
     color: var(--fg-color);
     border-color: var(--fg-color);
     touch-action: manipulation;
