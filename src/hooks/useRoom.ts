@@ -13,7 +13,7 @@ export type Room = {
     myId: string;
     socket: EasyWebSocket;
     join: (friendId: string) => void;
-    connected: boolean;
+    ready: boolean;
 };
 
 function valid(message: Message) {
@@ -45,7 +45,7 @@ export function useRoom(): Room {
     const socket = useEasyWebSocket({ valid });
     const friendIdRef = useRef("");
     const [myId, setMyId] = useState("    ");
-    const [connected, setConnected] = useState(false);
+    const [ready, setReady] = useState(false);
 
     useEffect(() => {
         setMyId(randomDigits(4));
@@ -58,14 +58,14 @@ export function useRoom(): Room {
                 return;
             }
             if (event.name === "close") {
-                setConnected(false);
+                setReady(false);
                 return;
             }
             if (isHelloMessage(event)) {
                 const message = event.message;
                 if (message.id !== myId && message.id === friendIdRef.current) {
                     socket.send({ id: myId, type: "hello" });
-                    setConnected(true);
+                    setReady(true);
                 }
                 return;
             }
@@ -86,6 +86,6 @@ export function useRoom(): Room {
         myId,
         socket,
         join,
-        connected,
+        ready,
     };
 }

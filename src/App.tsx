@@ -36,11 +36,11 @@ function App() {
         return "Error";
     }
 
-    if (!room.connected) {
+    if (!room.ready) {
         return "Waiting for friend...";
     }
 
-    return "Connected!";
+    return "Ready!";
 
     // return (
     //     <div className="page">
