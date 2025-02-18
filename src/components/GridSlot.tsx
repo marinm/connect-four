@@ -8,19 +8,20 @@ type Props = {
 
 export default function GridSlot(props: Props) {
     const slotClasses = classes({
-        "grid-slot": true,
         connected: props.connected,
     });
 
     const tokenClasses = classes({
-        token: true,
-        "player-1": props.value === 1,
-        "player-2": props.value === 2,
+        "player-1": props.value === 0,
+        "player-2": props.value === 1,
     });
 
     return (
-        <div className={slotClasses} onClick={() => props.select()}>
-            <div className={tokenClasses}></div>
+        <div
+            className={"grid-slot " + slotClasses}
+            onClick={() => props.select()}
+        >
+            <div className={"token " + tokenClasses}></div>
         </div>
     );
 }

@@ -5,27 +5,27 @@ const N_ROWS = 6;
 const N_COLS = 7;
 
 export type Game = {
-    grid: number[];
+    grid: (null | number)[];
     turn: 0 | 1;
     four: Position[];
     drop: (player: number, col: number) => void;
     positionAt: (index: number) => Position;
 };
 
+function emptyGrid(): number[] {
+    return new Array(N_ROWS * N_COLS).fill(null);
+}
+
 // The grid, and whose turn it is, and if there's 4 connected
 export function useGame(): Game {
-    const [grid, setGrid] = useState<number[]>(emptyGrid());
+    const [grid, setGrid] = useState<(null | number)[]>(emptyGrid());
     const [turn, setTurn] = useState<0 | 1>(0);
     const [four, setFour] = useState<Position[]>([]);
 
-    const gameOver = four.length === 4;
+    const gameOver = false;
 
-    function at(p: Position): number {
+    function at(p: Position): null | number {
         return grid[indexAt(p)];
-    }
-
-    function emptyGrid(): number[] {
-        return new Array(N_ROWS * N_COLS).fill(0);
     }
 
     function positionAt(index: number): Position {
@@ -104,7 +104,7 @@ export function useGame(): Game {
     function allSame(segment: Position[]): boolean {
         return segment
             .map((p) => at(p))
-            .every((value, _, array) => value != 0 && value === array[0]);
+            .every((value, _, array) => value != null && value === array[0]);
     }
 
     function fourSame(p: Position): Position[] | null {
@@ -124,7 +124,7 @@ export function useGame(): Game {
 
     function nextEmptyRow(column: number): number | null {
         for (let i = 0; i < N_ROWS; i++) {
-            if (grid[indexAt({ i, j: column })] === 0) {
+            if (grid[indexAt({ i, j: column })] === null) {
                 return i;
             }
         }
@@ -133,6 +133,7 @@ export function useGame(): Game {
 
     function drop(player: number, col: number): void {
         if (gameOver) {
+            console.log("game over");
             return;
         }
 
