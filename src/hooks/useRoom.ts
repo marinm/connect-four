@@ -13,13 +13,22 @@ export type Room = {
     myId: string;
     socket: EasyWebSocket;
     join: (friendId: string) => void;
+    connected: boolean;
 };
 
 function valid(message: Message) {
     return message != null;
 }
 
-function isHelloMessage(event: EasyWebSocketEvent): boolean {
+type HelloMessage = {
+    name: "message";
+    message: {
+        type: "hello";
+        id: string;
+    };
+};
+
+function isHelloMessage(event: EasyWebSocketEvent): event is HelloMessage {
     return (
         event.name === "message" &&
         event.message !== null &&
@@ -34,9 +43,9 @@ function isHelloMessage(event: EasyWebSocketEvent): boolean {
 
 export function useRoom(): Room {
     const socket = useEasyWebSocket({ valid });
-    const myIdRef = useRef("");
     const friendIdRef = useRef("");
     const [myId, setMyId] = useState("    ");
+    const [connected, setConnected] = useState(false);
 
     useEffect(() => {
         setMyId(randomDigits(4));
@@ -45,15 +54,23 @@ export function useRoom(): Room {
     const onEvent = useCallback(
         (event: EasyWebSocketEvent) => {
             if (event.name === "open") {
-                socket.send({ id: myIdRef.current, type: "hello" });
+                socket.send({ id: myId, type: "hello" });
+                return;
+            }
+            if (event.name === "close") {
+                setConnected(false);
                 return;
             }
             if (isHelloMessage(event)) {
                 const message = event.message;
-                console.log(message);
+                if (message.id !== myId && message.id === friendIdRef.current) {
+                    socket.send({ id: myId, type: "hello" });
+                    setConnected(true);
+                }
+                return;
             }
         },
-        [socket]
+        [socket, myId]
     );
 
     function join(friendId: string) {
@@ -69,5 +86,6 @@ export function useRoom(): Room {
         myId,
         socket,
         join,
+        connected,
     };
 }

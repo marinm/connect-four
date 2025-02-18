@@ -36,6 +36,10 @@ function App() {
         return "Error";
     }
 
+    if (!room.connected) {
+        return "Waiting for friend...";
+    }
+
     return "Connected!";
 
     // return (
