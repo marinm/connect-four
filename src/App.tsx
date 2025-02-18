@@ -1,5 +1,6 @@
 import "./App.css";
 import { CodePage } from "./components/CodePage";
+import { GameGrid } from "./components/GameGrid";
 import { useRoom } from "./hooks/useRoom";
 
 // function invite(name: string) {
@@ -40,13 +41,11 @@ function App() {
         return "Waiting for friend...";
     }
 
-    return "Ready!";
-
-    // return (
-    //     <div className="page">
-    //         <GameGrid />
-    //     </div>
-    // );
+    return (
+        <div className="page">
+            <GameGrid />
+        </div>
+    );
 }
 
 export default App;
