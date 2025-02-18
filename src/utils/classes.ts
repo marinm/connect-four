@@ -1,6 +1,6 @@
-export function classes(conditions: Object): string {
+export function classes(conditions: object): string {
     return Object.entries(conditions)
-        .filter(([_, value]) => value)
-        .map(([key, _]) => key)
+        .filter(([, value]) => value)
+        .map(([key]) => key)
         .join(" ");
 }
