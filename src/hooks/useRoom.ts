@@ -31,7 +31,20 @@ export function useRoom(): Room {
     const onEvent = useCallback(
         (event: EasyWebSocketEvent) => {
             if (event.name === "open") {
+                // Announce myself
                 socket.send({ name: myselfRef.current });
+            }
+            if (
+                event.name === "message" &&
+                event.message !== null &&
+                "name" in event.message
+            ) {
+                const message = event.message;
+                // Ignore own message
+                if (message.name === myselfRef.current) {
+                    return;
+                }
+                console.log("message from: ", message.name);
             }
         },
         [socket]
