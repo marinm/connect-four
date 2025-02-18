@@ -28,6 +28,14 @@ type HelloMessage = {
     };
 };
 
+type ReadyMessage = {
+    name: "message";
+    message: {
+        type: "hello";
+        id: string;
+    };
+};
+
 function isHelloMessage(event: EasyWebSocketEvent): event is HelloMessage {
     return (
         event.name === "message" &&
@@ -38,6 +46,19 @@ function isHelloMessage(event: EasyWebSocketEvent): event is HelloMessage {
         "type" in event.message &&
         typeof event.message.type === "string" &&
         event.message.type === "hello"
+    );
+}
+
+function isReadyMessage(event: EasyWebSocketEvent): event is ReadyMessage {
+    return (
+        event.name === "message" &&
+        event.message !== null &&
+        typeof event.message === "object" &&
+        "id" in event.message &&
+        typeof event.message.id === "string" &&
+        "type" in event.message &&
+        typeof event.message.type === "string" &&
+        event.message.type === "ready"
     );
 }
 
@@ -64,7 +85,13 @@ export function useRoom(): Room {
             if (isHelloMessage(event)) {
                 const message = event.message;
                 if (message.id !== myId && message.id === friendIdRef.current) {
-                    socket.send({ id: myId, type: "hello" });
+                    socket.send({ id: myId, type: "ready" });
+                }
+                return;
+            }
+            if (isReadyMessage(event)) {
+                const message = event.message;
+                if (message.id !== myId && message.id === friendIdRef.current) {
                     setReady(true);
                 }
                 return;
