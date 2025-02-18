@@ -27,6 +27,11 @@ export type EasyWebSocketEvent = {
     message: null | Message;
 };
 
+export type EasyWebSocketMessageEvent = {
+    name: "message";
+    message: Message;
+};
+
 type EventListener = (() => void) | ((event: EasyWebSocketEvent) => void);
 
 export type EasyWebSocket = {

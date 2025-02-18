@@ -4,65 +4,63 @@ import {
     useEasyWebSocket,
 } from "./useEasyWebSocket";
 import { useCallback, useRef } from "react";
-import { randomName } from "../utils/randomName";
 import { Message } from "./useEasyWebSocket";
 
 const SERVER_URL = "https://marinm.net/broadcast";
 
 export type Room = {
     socket: EasyWebSocket;
-    myself: string;
-    join: (code: string) => void;
+    join: (myId: string, friendId: string) => void;
 };
 
 function valid(message: Message) {
-    return "name" in message && typeof message.name === "string";
+    return message != null;
+}
+
+function isHelloMessage(event: EasyWebSocketEvent): boolean {
+    return (
+        event.name === "message" &&
+        event.message !== null &&
+        typeof event.message === "object" &&
+        "id" in event.message &&
+        typeof event.message.id === "string" &&
+        "type" in event.message &&
+        typeof event.message.type === "string" &&
+        event.message.type === "hello"
+    );
 }
 
 export function useRoom(): Room {
     const socket = useEasyWebSocket({ valid });
-    const myselfRef = useRef("");
-    const everyoneRef = useRef<string[]>([]);
+    const myIdRef = useRef("");
+    const friendIdRef = useRef("");
 
     const onEvent = useCallback(
         (event: EasyWebSocketEvent) => {
             if (event.name === "open") {
-                // Announce myself
-                socket.send({ name: myselfRef.current });
+                socket.send({ id: myIdRef.current, type: "hello" });
+                return;
             }
-            if (
-                event.name === "message" &&
-                event.message !== null &&
-                "name" in event.message &&
-                typeof event.message.name === "string"
-            ) {
-                const name = event.message.name;
-                // Ignore own message
-                if (name === myselfRef.current) {
-                    return;
-                }
-                if (!everyoneRef.current.includes(name)) {
-                    everyoneRef.current.push(name);
-                    console.log(
-                        "name list updated:",
-                        everyoneRef.current.join(",")
-                    );
-                }
+            if (isHelloMessage(event)) {
+                const message = event.message;
+                console.log(message);
             }
         },
         [socket]
     );
 
-    function join(code: string) {
-        myselfRef.current = randomName();
+    function join(myId: string, friendId: string) {
+        myIdRef.current = myId;
+        friendIdRef.current = friendId;
+        const channel = myId < friendId ? myId + friendId : friendId + myId;
+        const url = `${SERVER_URL}?channel=${channel}`;
+
         socket.listen(onEvent);
-        const url = `${SERVER_URL}?channel=${code}`;
         socket.open(url);
     }
 
     return {
         socket,
-        myself: myselfRef.current,
         join,
     };
 }

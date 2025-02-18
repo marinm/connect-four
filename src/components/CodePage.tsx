@@ -21,10 +21,7 @@ export function CodePage({ room }: Props) {
     }
 
     function connect() {
-        const mc = myCode;
-        const fc = friendCode.join("");
-        const fullCode = mc < fc ? mc + fc : fc + mc;
-        room.join(fullCode);
+        room.join(myCode, friendCode.join(""));
     }
 
     return (
