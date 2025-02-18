@@ -20,11 +20,11 @@ function indexAt(p: Position): number {
     return (N_ROWS - p.i - 1) * N_COLS + p.j;
 }
 
-export default function GameGrid() {
+export function GameGrid() {
     const [grid, setGrid] = useState<number[]>(emptyGrid());
     const [turn, setTurn] = useState<number>(0);
-	const [gameOver, setGameOver] = useState<boolean>(false);
-	const [four, setFour] = useState<Position[]>([]);
+    const [gameOver, setGameOver] = useState<boolean>(false);
+    const [four, setFour] = useState<Position[]>([]);
 
     function at(p: Position): number {
         return grid[indexAt(p)];
@@ -123,9 +123,9 @@ export default function GameGrid() {
     }
 
     function select(index: number): void {
-		if (gameOver) {
-			return;
-		}
+        if (gameOver) {
+            return;
+        }
         const p = positionAt(index);
         const col = p.j;
         const row = nextEmptyRow(col);
@@ -139,28 +139,27 @@ export default function GameGrid() {
         const connected = findFour();
 
         if (connected) {
-			console.log(connected);
-			setFour(connected)
-			setGameOver(true);
+            console.log(connected);
+            setFour(connected);
+            setGameOver(true);
             return;
         }
 
         setTurn(turn + 1);
     }
 
-
     const playerTurn = turn % 2;
 
-	let message = "";
-	if (gameOver) {
-		message = `Winner! Player ${playerTurn}`;
-	} else {
-		if (playerTurn == 0) {
-			message = "Your turn player 1";
-		} else if (playerTurn == 1) {
-			message = "Your turn player 2";
-		}
-	}
+    let message = "";
+    if (gameOver) {
+        message = `Winner! Player ${playerTurn}`;
+    } else {
+        if (playerTurn == 0) {
+            message = "Your turn player 1";
+        } else if (playerTurn == 1) {
+            message = "Your turn player 2";
+        }
+    }
 
     return (
         <>
@@ -171,7 +170,9 @@ export default function GameGrid() {
                         index={index}
                         value={slot}
                         select={() => select(index)}
-						connected={four.find(p => indexAt(p) === index) != undefined}
+                        connected={
+                            four.find((p) => indexAt(p) === index) != undefined
+                        }
                     />
                 ))}
             </div>
