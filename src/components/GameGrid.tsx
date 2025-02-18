@@ -41,24 +41,34 @@ export function GameGrid({ room }: Props) {
         });
     }, [room, game]);
 
-    const myTurn = game.turn === room.playingAs;
+    // const myTurn = game.turn === room.playingAs;
 
     return (
-        <div className="page">
-            <div className="game-grid">
-                {game.grid.map((value, index) => {
-                    const position = game.positionAt(index);
-                    return (
-                        <GridSlot
-                            key={index}
-                            value={value}
-                            select={() => select(position)}
-                            connected={game.four.includes(position)}
-                        />
-                    );
-                })}
-            </div>
-            {myTurn ? "My turn" : "Friend's turn"}
+        <div
+            style={{
+                backgroundColor: "#fefaf0",
+                border: "0.2ch solid #f2c673",
+                outline: "0.2ch solid #6c421e",
+                boxSizing: "border-box",
+                padding: "0.5ch",
+                borderRadius: "1ch",
+                display: "grid",
+                gridTemplateColumns: "repeat(7, 1fr)",
+                gap: "0.5ch",
+                width: "98%",
+            }}
+        >
+            {game.grid.map((value, index) => {
+                const position = game.positionAt(index);
+                return (
+                    <GridSlot
+                        key={index}
+                        value={value}
+                        select={() => select(position)}
+                        connected={game.four.includes(position)}
+                    />
+                );
+            })}
         </div>
     );
 }

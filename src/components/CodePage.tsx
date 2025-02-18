@@ -38,9 +38,16 @@ export function CodePage({ room }: Props) {
                     flexDirection: "column",
                     alignItems: "center",
                     gap: "1ch",
+                    aspectRatio: "1",
+                    border: "1px solid brown",
                 }}
             >
-                <div style={{ display: "flex", gap: "2ch" }}>
+                <div
+                    style={{
+                        display: "flex",
+                        gap: "2ch",
+                    }}
+                >
                     <div
                         style={{
                             border: "0.2ch solid #FFD36A",
@@ -68,7 +75,7 @@ export function CodePage({ room }: Props) {
                                 justifyContent: "center",
                                 alignItems: "center",
                                 width: "fit-content",
-                                padding: "1ch",
+                                padding: "0.2ch",
                                 textAlign: "center",
                             }}
                         >
@@ -104,7 +111,7 @@ export function CodePage({ room }: Props) {
                                 justifyContent: "center",
                                 alignItems: "center",
                                 width: "fit-content",
-                                padding: "1ch",
+                                padding: "0.2ch",
                                 textAlign: "center",
                             }}
                         >

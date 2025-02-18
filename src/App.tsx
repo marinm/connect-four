@@ -15,7 +15,19 @@ function App() {
     }
 
     return (
-        <div className="page">
+        <div
+            style={{
+                width: "100%",
+                height: "100%",
+                maxWidth: "14rem",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "1rem",
+                overflow: "auto",
+            }}
+        >
             <CodePage room={room} />
             <GameGrid room={room} />
         </div>

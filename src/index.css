@@ -1,5 +1,5 @@
 html {
-    font-size: min(7vw, 10mm);
+    font-size: min(7vw, 5mm);
     --bg-color: #ffd674;
     --fg-color: #824011;
 }
