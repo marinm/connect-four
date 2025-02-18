@@ -6,20 +6,19 @@ const N_COLS = 7;
 
 export type Game = {
     grid: number[];
-    turn: number;
+    turn: 0 | 1;
     four: Position[];
-    drop: (col: number) => void;
+    drop: (player: number, col: number) => void;
     positionAt: (index: number) => Position;
 };
 
 // The grid, and whose turn it is, and if there's 4 connected
 export function useGame(): Game {
     const [grid, setGrid] = useState<number[]>(emptyGrid());
-    const [turn, setTurn] = useState<number>(0);
+    const [turn, setTurn] = useState<0 | 1>(0);
     const [four, setFour] = useState<Position[]>([]);
 
     const gameOver = four.length === 4;
-    const playerTurn = turn % 2;
 
     function at(p: Position): number {
         return grid[indexAt(p)];
@@ -132,15 +131,21 @@ export function useGame(): Game {
         return null;
     }
 
-    function drop(col: number): void {
+    function drop(player: number, col: number): void {
         if (gameOver) {
+            return;
+        }
+
+        // This shouldn't happen, but check anyways
+        if (player !== turn) {
+            console.log("drop out of turn");
             return;
         }
 
         const row = nextEmptyRow(col);
 
         if (row != null) {
-            grid[indexAt({ i: row, j: col })] = playerTurn + 1;
+            grid[indexAt({ i: row, j: col })] = turn;
         }
 
         setGrid([...grid]);
@@ -153,7 +158,7 @@ export function useGame(): Game {
             return;
         }
 
-        setTurn(turn + 1);
+        setTurn(turn === 0 ? 1 : 0);
     }
 
     return {

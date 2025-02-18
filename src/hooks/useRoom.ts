@@ -24,6 +24,7 @@ export type Room = {
     drop: (col: number) => void;
     onDropEvent: (callback: RoomDropCallback) => void;
     ready: boolean;
+    playingAs: null | 0 | 1;
 };
 
 function valid(message: Message) {
@@ -100,6 +101,7 @@ export function useRoom(): Room {
     const [myId, setMyId] = useState("    ");
     const [ready, setReady] = useState(false);
     const dropCallbackRef = useRef<RoomDropCallback>(() => {});
+    const playingAsRef = useRef<null | 0 | 1>(null);
 
     useEffect(() => {
         setMyId(randomDigits(4));
@@ -150,6 +152,10 @@ export function useRoom(): Room {
         const channel = myId < friendId ? myId + friendId : friendId + myId;
         const url = `${SERVER_URL}?channel=${channel}`;
 
+        // If myId is lesser, I get the first drop
+        // TO DO: handle myId === friendId
+        playingAsRef.current = myId < friendId ? 0 : 1;
+
         socket.listen(onEvent);
         socket.open(url);
     }
@@ -173,5 +179,6 @@ export function useRoom(): Room {
         ready,
         drop,
         onDropEvent,
+        playingAs: playingAsRef.current,
     };
 }
