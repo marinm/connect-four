@@ -34,25 +34,28 @@ export function CodePage({ room }: Props) {
             style={{
                 width: "100%",
                 display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "1ch",
-                aspectRatio: "1",
-                border: "1px solid brown",
+                flexDirection: "row",
+                alignItems: "stretch",
+                justifyContent: "stretch",
+                gap: "0.5ch",
             }}
         >
             <div
                 style={{
                     display: "flex",
-                    gap: "2ch",
+                    gap: "0.5ch",
                 }}
             >
                 <div
                     style={{
-                        border: "0.2ch solid #FFD36A",
-                        outline: "0.2ch solid #994F11",
+                        padding: "0.2ch",
+                        border: "0.2ch solid #994F11",
                         borderRadius: "0.5ch",
                         overflow: "hidden",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "stretch",
+                        alignItems: "stretch",
                     }}
                 >
                     <div
@@ -76,6 +79,7 @@ export function CodePage({ room }: Props) {
                             width: "fit-content",
                             padding: "0.2ch",
                             textAlign: "center",
+                            flexGrow: "1",
                         }}
                     >
                         {positions.map((n) => (
@@ -85,10 +89,14 @@ export function CodePage({ room }: Props) {
                 </div>
                 <div
                     style={{
-                        border: "0.2ch solid #FFD36A",
-                        outline: "0.2ch solid #994F11",
+                        padding: "0.2ch",
+                        border: "0.2ch solid #994F11",
                         borderRadius: "0.5ch",
                         overflow: "hidden",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "stretch",
+                        alignItems: "stretch",
                     }}
                 >
                     <div
@@ -112,6 +120,7 @@ export function CodePage({ room }: Props) {
                             width: "fit-content",
                             padding: "0.2ch",
                             textAlign: "center",
+                            flexGrow: "1",
                         }}
                     >
                         {positions.map((n) => (
@@ -134,7 +143,7 @@ export function CodePage({ room }: Props) {
                     display: "grid",
                     gridTemplateColumns: "repeat(5, 1fr)",
                     gridTemplateRows: "1fr 1fr",
-                    gap: "0.3rem",
+                    gap: "0.2ch",
                     width: "90%",
                     maxWidth: "10cm",
                 }}
@@ -144,7 +153,7 @@ export function CodePage({ room }: Props) {
                         key={n}
                         onClick={() => enterNumber(n)}
                         style={{
-                            fontSize: "1rem",
+                            fontSize: "0.6rem",
                             backgroundColor: "transparent",
                             borderRadius: "0.2rem",
                             borderWidth: "0.1rem 0.1rem 0.2rem 0.1rem",
@@ -166,7 +175,7 @@ export function CodePage({ room }: Props) {
                     borderRadius: "0.7ch",
                     color: "#fff7e0",
                     fontWeight: "bold",
-                    padding: "0.5ch 1ch",
+                    writingMode: "vertical-lr",
                 }}
             >
                 PAIR

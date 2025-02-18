@@ -19,7 +19,6 @@ function App() {
             style={{
                 width: "100%",
                 height: "100%",
-                maxWidth: "14rem",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",

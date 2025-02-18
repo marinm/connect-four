@@ -1,16 +1,16 @@
-html {
-    font-size: min(7vw, 5mm);
-    --bg-color: #ffd674;
-    --fg-color: #824011;
-    overflow: hidden;
-}
-
 * {
     box-sizing: border-box;
     font-family: "Nunito", sans-serif;
     color: var(--fg-color);
     border-color: var(--fg-color);
     touch-action: manipulation;
+}
+
+html {
+    font-size: min(7vw, 5mm);
+    --bg-color: #ffd674;
+    --fg-color: #824011;
+    overflow: hidden;
 }
 
 body {
@@ -32,6 +32,8 @@ body {
 #root {
     width: 100%;
     height: 100%;
+    max-width: 20rem;
+    margin: auto;
     display: flex;
     justify-content: center;
 }
