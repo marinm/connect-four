@@ -1,4 +1,5 @@
 import "./App.css";
+import { CodePage } from "./components/CodePage";
 import { useRoom } from "./hooks/useRoom";
 
 // function invite(name: string) {
@@ -21,12 +22,7 @@ function App() {
     }
 
     if (room.socket.readyState === WebSocket.CLOSED) {
-        return (
-            <div className="page">
-                <button onClick={() => room.join()}>Connect</button>
-                <div>{room.socket.error ? "There was an error" : ""}</div>
-            </div>
-        );
+        return <CodePage />;
     }
 
     if (room.socket.readyState === WebSocket.CONNECTING) {
@@ -41,12 +37,7 @@ function App() {
         return "Error";
     }
 
-    return (
-        <div>
-            <div>Connected!</div>
-            <div>Playing as {room.myself}</div>
-        </div>
-    );
+    return "Connected!";
 
     // return (
     //     <div className="page">
