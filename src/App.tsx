@@ -1,7 +1,5 @@
 import "./App.css";
-import { useRef } from "react";
 import { useRoom } from "./hooks/useRoom";
-import { randomName } from "./utils/randomName";
 
 // function invite(name: string) {
 //     return `invite ${name}`;

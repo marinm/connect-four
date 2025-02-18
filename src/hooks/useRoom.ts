@@ -23,6 +23,7 @@ function valid(message: Message) {
 export function useRoom(): Room {
     const socket = useEasyWebSocket({ url: SERVER_URL, valid });
     const myselfRef = useRef("");
+    const everyoneRef = useRef<string[]>([]);
 
     function invite(player: string) {
         console.log(`invite ${player}`);
@@ -37,14 +38,21 @@ export function useRoom(): Room {
             if (
                 event.name === "message" &&
                 event.message !== null &&
-                "name" in event.message
+                "name" in event.message &&
+                typeof event.message.name === "string"
             ) {
-                const message = event.message;
+                const name = event.message.name;
                 // Ignore own message
-                if (message.name === myselfRef.current) {
+                if (name === myselfRef.current) {
                     return;
                 }
-                console.log("message from: ", message.name);
+                if (!everyoneRef.current.includes(name)) {
+                    everyoneRef.current.push(name);
+                    console.log(
+                        "name list updated:",
+                        everyoneRef.current.join(",")
+                    );
+                }
             }
         },
         [socket]
