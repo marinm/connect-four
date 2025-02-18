@@ -7,13 +7,12 @@ import { useCallback, useRef } from "react";
 import { randomName } from "../utils/randomName";
 import { Message } from "./useEasyWebSocket";
 
-const SERVER_URL = "https://marinm.net/broadcast?channel=connect-four";
+const SERVER_URL = "https://marinm.net/broadcast";
 
 export type Room = {
     socket: EasyWebSocket;
     myself: string;
-    join: () => void;
-    invite: (player: string) => void;
+    join: (code: string) => void;
 };
 
 function valid(message: Message) {
@@ -21,13 +20,9 @@ function valid(message: Message) {
 }
 
 export function useRoom(): Room {
-    const socket = useEasyWebSocket({ url: SERVER_URL, valid });
+    const socket = useEasyWebSocket({ valid });
     const myselfRef = useRef("");
     const everyoneRef = useRef<string[]>([]);
-
-    function invite(player: string) {
-        console.log(`invite ${player}`);
-    }
 
     const onEvent = useCallback(
         (event: EasyWebSocketEvent) => {
@@ -58,16 +53,16 @@ export function useRoom(): Room {
         [socket]
     );
 
-    function join() {
+    function join(code: string) {
         myselfRef.current = randomName();
         socket.listen(onEvent);
-        socket.open();
+        const url = `${SERVER_URL}?channel=${code}`;
+        socket.open(url);
     }
 
     return {
         socket,
         myself: myselfRef.current,
         join,
-        invite,
     };
 }

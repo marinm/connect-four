@@ -11,7 +11,6 @@ import { useRoom } from "./hooks/useRoom";
 
 function App() {
     const room = useRoom();
-    // const players: string[] = [];
 
     if (room === null) {
         return "";
@@ -22,7 +21,7 @@ function App() {
     }
 
     if (room.socket.readyState === WebSocket.CLOSED) {
-        return <CodePage />;
+        return <CodePage room={room} />;
     }
 
     if (room.socket.readyState === WebSocket.CONNECTING) {
@@ -38,22 +37,6 @@ function App() {
     }
 
     return "Connected!";
-
-    // return (
-    //     <div className="page">
-    //         <h1 className="inverted">Connect Four</h1>
-    //         <div className="online-list">
-    //             {myself} (myself)
-    //             <ul>
-    //                 {players.map((player) => (
-    //                     <li onClick={() => invite(player)} key={player}>
-    //                         <div>{player}</div>
-    //                     </li>
-    //                 ))}
-    //             </ul>
-    //         </div>
-    //     </div>
-    // );
 
     // return (
     //     <div className="page">

@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { randomDigits } from "../utils/randomDigits";
 import { classes } from "../utils/classes";
+import { Room } from "../hooks/useRoom";
 
-export function CodePage() {
+type Props = {
+    room: Room;
+};
+
+export function CodePage({ room }: Props) {
     const [position, setPosition] = useState(0);
     const [friendCode, setFriendCode] = useState<number[]>([0, 0, 0, 0]);
     const myCode = randomDigits(4);
@@ -19,7 +24,7 @@ export function CodePage() {
         const mc = myCode;
         const fc = friendCode.join("");
         const fullCode = mc < fc ? mc + fc : fc + mc;
-        console.log("connect ", fullCode);
+        room.join(fullCode);
     }
 
     return (
