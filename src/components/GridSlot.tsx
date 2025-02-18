@@ -1,7 +1,7 @@
 import { classes } from "../utils/classes";
 
 type Props = {
-    value: number;
+    value: null | number;
     connected: boolean;
     select: () => void;
 };
