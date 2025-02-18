@@ -32,7 +32,7 @@ function App() {
     if (room.socket.readyState === WebSocket.CLOSED) {
         return (
             <div className="page">
-                <button onClick={() => room?.join(myself)}>Connect</button>
+                <button onClick={() => room.join(myself)}>Connect</button>
                 <div>{room.socket.error ? "There was an error" : ""}</div>
             </div>
         );
