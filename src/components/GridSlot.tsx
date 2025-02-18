@@ -1,26 +1,30 @@
 import { classes } from "../utils/classes";
 
 type Props = {
-    index: number;
+    row: number;
+    col: number;
     value: number;
-    select: (index: number) => void;
+    select: (row: number, col: number) => void;
     connected: boolean;
 };
 
-export default function GridSlot({ index, value, select, connected }: Props) {
+export default function GridSlot(props: Props) {
     const slotClasses = classes({
         "grid-slot": true,
-        connected: connected,
+        connected: props.connected,
     });
 
     const tokenClasses = classes({
         token: true,
-        "player-1": value === 1,
-        "player-2": value === 2,
+        "player-1": props.value === 1,
+        "player-2": props.value === 2,
     });
 
     return (
-        <div className={slotClasses} onClick={() => select(index)}>
+        <div
+            className={slotClasses}
+            onClick={() => props.select(props.row, props.col)}
+        >
             <div className={tokenClasses}></div>
         </div>
     );
