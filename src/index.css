@@ -2,6 +2,7 @@ html {
     font-size: min(7vw, 5mm);
     --bg-color: #ffd674;
     --fg-color: #824011;
+    overflow: hidden;
 }
 
 * {
@@ -15,6 +16,7 @@ html {
 body {
     width: 100dvw;
     height: 100dvh;
+    overflow: hidden;
     font-size: 1rem;
     padding: 5vw 5vw;
     margin: 0;
