@@ -1,3 +1,2 @@
-export default {
-	serverURL: "https://marinm.net/broadcast?channel=connect-four-presence"
-};
+export const SERVER_URL = "https://marinm.net/broadcast";
+export const CODE_LENGTH = 2;

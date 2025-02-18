@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { classes } from "../utils/classes";
 import { Room } from "../hooks/useRoom";
+import { CODE_LENGTH } from "../config";
 
 type Props = {
     room: Room;
@@ -8,22 +9,34 @@ type Props = {
 
 export function CodePage({ room }: Props) {
     const [position, setPosition] = useState(0);
-    const [friendCode, setFriendCode] = useState<number[]>([0, 0, 0, 0]);
+    const [friendCode, setFriendCode] = useState<number[]>(
+        Array(CODE_LENGTH).fill(0)
+    );
 
     function enterNumber(n: number) {
         friendCode[position] = n;
         setFriendCode([...friendCode]);
 
         // If on the last digit, stay there
-        setPosition(position === 3 ? 3 : (position + 1) % 4);
+        setPosition(
+            position === CODE_LENGTH - 1
+                ? CODE_LENGTH - 1
+                : (position + 1) % CODE_LENGTH
+        );
     }
+
+    const positions = Array(CODE_LENGTH)
+        .fill(0)
+        .map((_, i) => i);
+
+    console.log(positions);
 
     return (
         <div className="page">
             <div id="screen-code-input" className="screen">
                 Your code
                 <div id="own-code">
-                    {[0, 1, 2, 3].map((n) => (
+                    {positions.map((n) => (
                         <div key={n} className="digit">
                             {room.myId[n]}
                         </div>
@@ -31,7 +44,7 @@ export function CodePage({ room }: Props) {
                 </div>
                 <div>Enter friend's code</div>
                 <div id="friend-code">
-                    {[0, 1, 2, 3].map((n) => (
+                    {positions.map((n) => (
                         <div
                             key={n}
                             className={classes({

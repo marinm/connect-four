@@ -14,6 +14,7 @@ export function GameGrid({ room }: Props) {
     // On tap/click, just emit the intent. I will update my visual board only
     // when receiving the echo of this intent in the onDropEvent() handler.
     function select(position: Position) {
+        console.log(`select: turn ${game.turn} col ${position.j}`);
         // If it's not my turn, do nothing
         if (game.turn != room.playingAs) {
             console.log("not my turn");
@@ -24,6 +25,8 @@ export function GameGrid({ room }: Props) {
 
     useEffect(() => {
         room.onDropEvent((event: RoomDropEvent) => {
+            console.log(`drop event: turn ${game.turn} col ${event.col}`);
+
             // Is it this player's turn?
             const friendPlayingAs = room.playingAs === 0 ? 1 : 0;
             const playerTurn =

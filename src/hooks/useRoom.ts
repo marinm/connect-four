@@ -5,9 +5,8 @@ import {
 } from "./useEasyWebSocket";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Message } from "./useEasyWebSocket";
+import { SERVER_URL, CODE_LENGTH } from "../config.ts";
 import { randomDigits } from "../utils/randomDigits";
-
-const SERVER_URL = "https://marinm.net/broadcast";
 
 export type RoomDropEvent = {
     type: "drop";
@@ -104,7 +103,7 @@ export function useRoom(): Room {
     const playingAsRef = useRef<null | 0 | 1>(null);
 
     useEffect(() => {
-        setMyId(randomDigits(4));
+        setMyId(randomDigits(CODE_LENGTH));
     }, []);
 
     const onEvent = useCallback(
