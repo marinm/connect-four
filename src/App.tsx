@@ -18,7 +18,7 @@ function App() {
     }
 
     if (!room.socket.isOnline) {
-        return "No internet connection";
+        return <div className="page">No internet connection</div>;
     }
 
     if (room.socket.readyState === WebSocket.CLOSED) {
@@ -26,19 +26,20 @@ function App() {
     }
 
     if (room.socket.readyState === WebSocket.CONNECTING) {
-        return "Connecting...";
+        return <div className="page">Connecting...</div>;
     }
 
     if (room.socket.readyState === WebSocket.CLOSING) {
-        return "Closing...";
+        return <div className="page">Closing...</div>;
     }
 
     if (room.socket.readyState != WebSocket.OPEN) {
-        return "Error";
+        // This should never happen
+        return <div className="page">Error</div>;
     }
 
     if (!room.ready) {
-        return "Waiting for friend...";
+        return <div className="page">Waiting for friend...</div>;
     }
 
     return (
