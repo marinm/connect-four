@@ -43,7 +43,7 @@ function App() {
 
     return (
         <div className="page">
-            <GameGrid />
+            <GameGrid room={room} />
         </div>
     );
 }

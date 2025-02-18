@@ -9,10 +9,20 @@ import { randomDigits } from "../utils/randomDigits";
 
 const SERVER_URL = "https://marinm.net/broadcast";
 
+export type RoomDropEvent = {
+    type: "drop";
+    id: string;
+    col: number;
+};
+
+export type RoomDropCallback = (() => void) | ((event: RoomDropEvent) => void);
+
 export type Room = {
     myId: string;
     socket: EasyWebSocket;
     join: (friendId: string) => void;
+    drop: (col: number) => void;
+    onDropEvent: (callback: RoomDropCallback) => void;
     ready: boolean;
 };
 
@@ -33,6 +43,15 @@ type ReadyMessage = {
     message: {
         type: "hello";
         id: string;
+    };
+};
+
+type DropMessage = {
+    name: "message";
+    message: {
+        type: "drop";
+        id: string;
+        col: number;
     };
 };
 
@@ -62,11 +81,25 @@ function isReadyMessage(event: EasyWebSocketEvent): event is ReadyMessage {
     );
 }
 
+function isDropMessage(event: EasyWebSocketEvent): event is DropMessage {
+    return (
+        event.name === "message" &&
+        event.message !== null &&
+        typeof event.message === "object" &&
+        "id" in event.message &&
+        typeof event.message.id === "string" &&
+        "type" in event.message &&
+        typeof event.message.type === "string" &&
+        event.message.type === "drop"
+    );
+}
+
 export function useRoom(): Room {
     const socket = useEasyWebSocket({ valid });
     const friendIdRef = useRef("");
     const [myId, setMyId] = useState("    ");
     const [ready, setReady] = useState(false);
+    const dropCallbackRef = useRef<RoomDropCallback>(() => {});
 
     useEffect(() => {
         setMyId(randomDigits(4));
@@ -104,6 +137,10 @@ export function useRoom(): Room {
                 }
                 return;
             }
+            if (isDropMessage(event)) {
+                dropCallbackRef.current(event.message);
+                return;
+            }
         },
         [socket, myId]
     );
@@ -117,10 +154,24 @@ export function useRoom(): Room {
         socket.open(url);
     }
 
+    function drop(col: number) {
+        socket.send({
+            type: "drop",
+            id: myId,
+            col: col,
+        });
+    }
+
+    function onDropEvent(callback: (event: RoomDropEvent) => void) {
+        dropCallbackRef.current = callback;
+    }
+
     return {
         myId,
         socket,
         join,
         ready,
+        drop,
+        onDropEvent,
     };
 }
