@@ -2,6 +2,7 @@ import { useState } from "react";
 import { classes } from "../utils/classes";
 import { Room } from "../hooks/useRoom";
 import { CODE_LENGTH } from "../config";
+import { StatusBadge } from "./StatusBadge";
 
 type Props = {
     room: Room;
@@ -34,152 +35,180 @@ export function CodePage({ room }: Props) {
             style={{
                 width: "100%",
                 display: "flex",
-                flexDirection: "row",
-                alignItems: "stretch",
-                justifyContent: "stretch",
-                gap: "0.5ch",
+                flexDirection: "column",
+                gap: "1ch",
             }}
         >
             <div
                 style={{
+                    width: "100%",
                     display: "flex",
+                    flexDirection: "row",
+                    alignItems: "stretch",
+                    justifyContent: "stretch",
                     gap: "0.5ch",
                 }}
             >
                 <div
                     style={{
-                        padding: "0.2ch",
-                        border: "0.2ch solid #994F11",
-                        borderRadius: "0.5ch",
-                        overflow: "hidden",
                         display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "stretch",
-                        alignItems: "stretch",
+                        gap: "0.5ch",
                     }}
                 >
                     <div
                         style={{
-                            fontSize: "0.5rem",
-                            textAlign: "center",
-                            backgroundColor: "#994F11",
-                            color: "#FFF9EC",
-                            padding: "0.5ch",
-                            borderBottom: "0.5ch solid #FFD873",
+                            padding: "0.2ch",
+                            border: "0.2ch solid #994F11",
+                            borderRadius: "0.5ch",
+                            overflow: "hidden",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "stretch",
+                            alignItems: "stretch",
                         }}
                     >
-                        MY CODE
+                        <div
+                            style={{
+                                fontSize: "0.5rem",
+                                textAlign: "center",
+                                backgroundColor: "#994F11",
+                                color: "#FFF9EC",
+                                padding: "0.5ch",
+                                borderBottom: "0.5ch solid #FFD873",
+                            }}
+                        >
+                            MY CODE
+                        </div>
+                        <div
+                            style={{
+                                backgroundColor: "#FFF9EC",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "fit-content",
+                                padding: "0.2ch",
+                                textAlign: "center",
+                                flexGrow: "1",
+                            }}
+                        >
+                            {positions.map((n) => (
+                                <div key={n}>{room.myId[n]}</div>
+                            ))}
+                        </div>
                     </div>
                     <div
                         style={{
-                            backgroundColor: "#FFF9EC",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "fit-content",
                             padding: "0.2ch",
-                            textAlign: "center",
-                            flexGrow: "1",
+                            border: "0.2ch solid #994F11",
+                            borderRadius: "0.5ch",
+                            overflow: "hidden",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "stretch",
+                            alignItems: "stretch",
                         }}
                     >
-                        {positions.map((n) => (
-                            <div key={n}>{room.myId[n]}</div>
-                        ))}
+                        <div
+                            style={{
+                                fontSize: "0.5rem",
+                                textAlign: "center",
+                                backgroundColor: "#994F11",
+                                color: "#FFF9EC",
+                                padding: "0.5ch",
+                                borderBottom: "0.5ch solid #FFD873",
+                            }}
+                        >
+                            FRIEND
+                        </div>
+                        <div
+                            style={{
+                                backgroundColor: "#FFF9EC",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "fit-content",
+                                padding: "0.2ch",
+                                textAlign: "center",
+                                flexGrow: "1",
+                            }}
+                        >
+                            {positions.map((n) => (
+                                <div
+                                    key={n}
+                                    className={classes({
+                                        inverted: position === n,
+                                    })}
+                                    onClick={() => setPosition(n)}
+                                >
+                                    {friendCode[n]}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
+
                 <div
                     style={{
-                        padding: "0.2ch",
-                        border: "0.2ch solid #994F11",
-                        borderRadius: "0.5ch",
-                        overflow: "hidden",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "stretch",
-                        alignItems: "stretch",
+                        display: "grid",
+                        gridTemplateColumns: "repeat(5, 1fr)",
+                        gridTemplateRows: "1fr 1fr",
+                        gap: "0.2ch",
+                        flexGrow: 1,
                     }}
                 >
-                    <div
-                        style={{
-                            fontSize: "0.5rem",
-                            textAlign: "center",
-                            backgroundColor: "#994F11",
-                            color: "#FFF9EC",
-                            padding: "0.5ch",
-                            borderBottom: "0.5ch solid #FFD873",
-                        }}
-                    >
-                        FRIEND
-                    </div>
-                    <div
-                        style={{
-                            backgroundColor: "#FFF9EC",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "fit-content",
-                            padding: "0.2ch",
-                            textAlign: "center",
-                            flexGrow: "1",
-                        }}
-                    >
-                        {positions.map((n) => (
-                            <div
-                                key={n}
-                                className={classes({
-                                    inverted: position === n,
-                                })}
-                                onClick={() => setPosition(n)}
-                            >
-                                {friendCode[n]}
-                            </div>
-                        ))}
-                    </div>
+                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+                        <button
+                            key={n}
+                            onClick={() => enterNumber(n)}
+                            style={{
+                                fontSize: "0.7rem",
+                                backgroundColor: "transparent",
+                                borderRadius: "0.2rem",
+                                borderWidth: "0.1rem 0.1rem 0.2rem 0.1rem",
+                                padding: "0",
+                                margin: "0",
+                                aspectRatio: "1",
+                            }}
+                        >
+                            {n}
+                        </button>
+                    ))}
                 </div>
+                <button
+                    onClick={() => room.join(friendCode.join(""))}
+                    style={{
+                        fontSize: "0.8rem",
+                        backgroundColor: "#e49d53",
+                        border: "0.3ch solid #994F11",
+                        borderRadius: "0.7ch",
+                        color: "#fff7e0",
+                        fontWeight: "bold",
+                        writingMode: "vertical-lr",
+                    }}
+                >
+                    PAIR
+                </button>
             </div>
-
             <div
                 style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(5, 1fr)",
-                    gridTemplateRows: "1fr 1fr",
-                    gap: "0.2ch",
-                    width: "90%",
-                    maxWidth: "10cm",
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: "0.8ch",
                 }}
             >
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
-                    <button
-                        key={n}
-                        onClick={() => enterNumber(n)}
-                        style={{
-                            fontSize: "0.6rem",
-                            backgroundColor: "transparent",
-                            borderRadius: "0.2rem",
-                            borderWidth: "0.1rem 0.1rem 0.2rem 0.1rem",
-                            aspectRatio: "1",
-                            padding: "0",
-                            margin: "0",
-                        }}
-                    >
-                        {n}
-                    </button>
-                ))}
+                <StatusBadge
+                    label="Internet"
+                    on={room.socket.isOnline}
+                    error={false}
+                />
+                <StatusBadge
+                    label="Server"
+                    on={room.socket.readyState === WebSocket.OPEN}
+                    error={false}
+                />
+                <StatusBadge label="Session" on={room.ready} error={false} />
             </div>
-            <button
-                onClick={() => room.join(friendCode.join(""))}
-                style={{
-                    fontSize: "0.8rem",
-                    backgroundColor: "#e49d53",
-                    border: "0.3ch solid #994F11",
-                    borderRadius: "0.7ch",
-                    color: "#fff7e0",
-                    fontWeight: "bold",
-                    writingMode: "vertical-lr",
-                }}
-            >
-                PAIR
-            </button>
         </div>
     );
 }
