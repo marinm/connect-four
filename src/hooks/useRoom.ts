@@ -20,6 +20,7 @@ export type Room = {
     myId: string;
     socket: EasyWebSocket;
     join: (friendId: string) => void;
+    leave: () => void;
     drop: (col: number) => void;
     onDropEvent: (callback: RoomDropCallback) => void;
     ready: boolean;
@@ -159,6 +160,10 @@ export function useRoom(): Room {
         socket.open(url);
     }
 
+    function leave() {
+        socket.close();
+    }
+
     function drop(col: number) {
         socket.send({
             type: "drop",
@@ -175,6 +180,7 @@ export function useRoom(): Room {
         myId,
         socket,
         join,
+        leave,
         ready,
         drop,
         onDropEvent,

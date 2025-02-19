@@ -209,6 +209,28 @@ export function CodePage({ room }: Props) {
                 />
                 <StatusBadge label="Session" on={room.ready} error={false} />
             </div>
+            <div
+                style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "end",
+                }}
+            >
+                <button
+                    onClick={() => room.leave()}
+                    style={{
+                        fontSize: "0.8rem",
+                        backgroundColor: "#e49d53",
+                        border: "0.3ch solid #994F11",
+                        borderRadius: "0.7ch",
+                        color: "#994F11",
+                        fontWeight: "bold",
+                    }}
+                    disabled={!room.ready}
+                >
+                    Leave
+                </button>
+            </div>
         </div>
     );
 }

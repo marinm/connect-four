@@ -2,3 +2,7 @@
     background-color: var(--fg-color);
     color: var(--bg-color);
 }
+
+button:disabled {
+    opacity: 0.5;
+}
