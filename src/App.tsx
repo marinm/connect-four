@@ -1,5 +1,5 @@
 import "./App.css";
-import { CodePage } from "./components/CodePage";
+import { SocketControls } from "./components/SocketControls";
 import { GameGrid } from "./components/GameGrid";
 import { useRoom } from "./hooks/useRoom";
 import { useGame } from "./hooks/useGame";
@@ -49,7 +49,7 @@ function App() {
                 overflow: "auto",
             }}
         >
-            <CodePage room={room} />
+            <SocketControls room={room} />
             <GameGrid room={room} game={game} />
         </div>
     );

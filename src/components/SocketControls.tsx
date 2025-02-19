@@ -8,7 +8,7 @@ type Props = {
     room: Room;
 };
 
-export function CodePage({ room }: Props) {
+export function SocketControls({ room }: Props) {
     const [position, setPosition] = useState(0);
     const [friendCode, setFriendCode] = useState<number[]>(
         Array(CODE_LENGTH).fill(0)
