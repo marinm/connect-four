@@ -226,7 +226,7 @@ export function SocketControls({ room }: Props) {
                         color: "#994F11",
                         fontWeight: "bold",
                     }}
-                    disabled={!room.ready}
+                    disabled={!room.isConnected}
                 >
                     Leave
                 </button>
