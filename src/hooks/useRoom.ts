@@ -105,13 +105,18 @@ export function useRoom(): Room {
     const dropCallbackRef = useRef<RoomDropCallback>(() => {});
     const playingAsRef = useRef<null | 0 | 1>(null);
 
-    function newId() {
+    const newId = useCallback(() => {
+        // A new myId should only be created when the WebSocket connection is
+        // closed
+        if (socket.readyState !== WebSocket.CLOSED) {
+            return;
+        }
         setMyId(randomDigits(CODE_LENGTH));
-    }
+    }, [socket.readyState]);
 
     useEffect(() => {
         newId();
-    }, []);
+    }, [newId]);
 
     const onEvent = useCallback(
         (event: EasyWebSocketEvent) => {

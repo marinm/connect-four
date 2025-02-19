@@ -26,6 +26,14 @@ export function SocketControls({ room }: Props) {
         );
     }
 
+    function handleNewIdClick() {
+        // The WebSocket should be closed
+        if (room.socket.readyState !== WebSocket.CLOSED) {
+            return;
+        }
+        room.newId();
+    }
+
     const positions = Array(CODE_LENGTH)
         .fill(0)
         .map((_, i) => i);
@@ -56,7 +64,7 @@ export function SocketControls({ room }: Props) {
                     }}
                 >
                     <div
-                        onClick={() => room.newId()}
+                        onClick={() => handleNewIdClick()}
                         style={{
                             padding: "0.2ch",
                             border: "0.2ch solid #994F11",
