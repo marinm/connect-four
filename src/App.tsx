@@ -2,9 +2,31 @@ import "./App.css";
 import { CodePage } from "./components/CodePage";
 import { GameGrid } from "./components/GameGrid";
 import { useRoom } from "./hooks/useRoom";
+import { useGame } from "./hooks/useGame";
+import { useEffect } from "react";
+import { RoomDropEvent } from "./hooks/useRoom";
 
 function App() {
     const room = useRoom();
+    const game = useGame();
+
+    useEffect(() => {
+        room.onDropEvent((event: RoomDropEvent) => {
+            console.log(`drop event: turn ${game.turn} col ${event.col}`);
+
+            // Is it this player's turn?
+            const friendPlayingAs = room.playingAs === 0 ? 1 : 0;
+            const playerTurn =
+                event.id === room.myId ? room.playingAs : friendPlayingAs;
+
+            // This shouldn't happen, but check anyways
+            if (playerTurn !== game.turn) {
+                console.log("out of turn message");
+                return;
+            }
+            game.drop(playerTurn, event.col);
+        });
+    }, [room, game]);
 
     if (room === null) {
         return "";
@@ -28,7 +50,7 @@ function App() {
             }}
         >
             <CodePage room={room} />
-            <GameGrid room={room} />
+            <GameGrid room={room} game={game} />
         </div>
     );
 
