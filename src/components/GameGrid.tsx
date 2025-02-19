@@ -56,6 +56,9 @@ export function GameGrid({ room, game }: Props) {
                     })}
                 </div>
             </div>
+            <div>
+                {room.playingAs === game.turn ? "My turn" : "Friend's turn"}
+            </div>
         </div>
     );
 }
