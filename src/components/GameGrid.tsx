@@ -26,32 +26,36 @@ export function GameGrid({ room, game }: Props) {
     const disabled = !room.ready;
 
     return (
-        <div
-            style={{
-                backgroundColor: "#fefaf0",
-                border: "0.2ch solid #f2c673",
-                outline: "0.2ch solid #6c421e",
-                boxSizing: "border-box",
-                padding: "0.5ch",
-                borderRadius: "1ch",
-                display: "grid",
-                gridTemplateColumns: "repeat(7, 1fr)",
-                gap: "0.5ch",
-                width: "98%",
-                opacity: disabled ? "0.5" : "",
-            }}
-        >
-            {game.grid.map((value, index) => {
-                const position = game.positionAt(index);
-                return (
-                    <GridSlot
-                        key={index}
-                        value={value}
-                        select={() => select(position)}
-                        connected={game.four.includes(position)}
-                    />
-                );
-            })}
+        <div style={{ width: "100%" }}>
+            <div
+                style={{ border: "0.2ch solid #6c421e", borderRadius: "1.2ch" }}
+            >
+                <div
+                    style={{
+                        backgroundColor: "#fefaf0",
+                        border: "0.2ch solid #f2c673",
+                        boxSizing: "border-box",
+                        padding: "0.5ch",
+                        borderRadius: "1ch",
+                        display: "grid",
+                        gridTemplateColumns: "repeat(7, 1fr)",
+                        gap: "0.5ch",
+                        opacity: disabled ? "0.5" : "",
+                    }}
+                >
+                    {game.grid.map((value, index) => {
+                        const position = game.positionAt(index);
+                        return (
+                            <GridSlot
+                                key={index}
+                                value={value}
+                                select={() => select(position)}
+                                connected={game.four.includes(position)}
+                            />
+                        );
+                    })}
+                </div>
+            </div>
         </div>
     );
 }
