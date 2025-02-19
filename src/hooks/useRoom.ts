@@ -18,6 +18,7 @@ export type RoomDropCallback = (() => void) | ((event: RoomDropEvent) => void);
 
 export type Room = {
     myId: string;
+    newId: () => void;
     socket: EasyWebSocket;
     isConnected: boolean;
     join: (friendId: string) => void;
@@ -104,8 +105,12 @@ export function useRoom(): Room {
     const dropCallbackRef = useRef<RoomDropCallback>(() => {});
     const playingAsRef = useRef<null | 0 | 1>(null);
 
-    useEffect(() => {
+    function newId() {
         setMyId(randomDigits(CODE_LENGTH));
+    }
+
+    useEffect(() => {
+        newId();
     }, []);
 
     const onEvent = useCallback(
@@ -181,6 +186,7 @@ export function useRoom(): Room {
 
     return {
         myId,
+        newId,
         socket,
         isConnected,
         join,

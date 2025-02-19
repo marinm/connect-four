@@ -56,6 +56,7 @@ export function SocketControls({ room }: Props) {
                     }}
                 >
                     <div
+                        onClick={() => room.newId()}
                         style={{
                             padding: "0.2ch",
                             border: "0.2ch solid #994F11",
