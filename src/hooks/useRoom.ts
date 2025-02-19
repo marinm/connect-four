@@ -19,6 +19,7 @@ export type RoomDropCallback = (() => void) | ((event: RoomDropEvent) => void);
 export type Room = {
     myId: string;
     socket: EasyWebSocket;
+    isConnected: boolean;
     join: (friendId: string) => void;
     leave: () => void;
     drop: (col: number) => void;
@@ -176,9 +177,12 @@ export function useRoom(): Room {
         dropCallbackRef.current = callback;
     }
 
+    const isConnected = socket.readyState === WebSocket.OPEN;
+
     return {
         myId,
         socket,
+        isConnected,
         join,
         leave,
         ready,
