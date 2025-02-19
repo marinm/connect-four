@@ -25,6 +25,17 @@ export function GameGrid({ room, game }: Props) {
 
     const disabled = !room.ready;
 
+    function turnLabel(): string {
+        if (game.on) {
+            return room.playingAs === game.turn ? "My turn" : "Friend's turn";
+        }
+        return "Nobody's turn";
+    }
+
+    function gameOnLabel(): string {
+        return game.on ? "Game on" : "Game off";
+    }
+
     return (
         <div style={{ width: "100%" }}>
             <div
@@ -56,8 +67,15 @@ export function GameGrid({ room, game }: Props) {
                     })}
                 </div>
             </div>
-            <div>
-                {room.playingAs === game.turn ? "My turn" : "Friend's turn"}
+            <div
+                style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                }}
+            >
+                <div>{turnLabel()}</div>
+                <div>{gameOnLabel()}</div>
             </div>
         </div>
     );

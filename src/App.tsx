@@ -26,6 +26,13 @@ function App() {
             }
             game.drop(playerTurn, event.col);
         });
+
+        if (room.ready && !game.on) {
+            game.start();
+        }
+        if (game.on && !room.ready) {
+            game.stop();
+        }
     }, [room, game]);
 
     if (room === null) {

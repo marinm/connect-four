@@ -8,6 +8,9 @@ export type Game = {
     grid: (null | number)[];
     turn: 0 | 1;
     four: Position[];
+    on: boolean;
+    start: () => void;
+    stop: () => void;
     drop: (player: number, col: number) => void;
     positionAt: (index: number) => Position;
 };
@@ -21,8 +24,23 @@ export function useGame(): Game {
     const [grid, setGrid] = useState<(null | number)[]>(emptyGrid());
     const [turn, setTurn] = useState<0 | 1>(0);
     const [four, setFour] = useState<Position[]>([]);
+    const [on, setOn] = useState(false);
 
-    const gameOver = false;
+    function start() {
+        // If the game is already on, do nothing
+        if (on) {
+            return;
+        }
+        setOn(true);
+    }
+
+    function stop() {
+        // If the game is not on, then do nothing
+        if (!on) {
+            return;
+        }
+        setOn(false);
+    }
 
     function at(p: Position): null | number {
         return grid[indexAt(p)];
@@ -132,7 +150,7 @@ export function useGame(): Game {
     }
 
     function drop(player: number, col: number): void {
-        if (gameOver) {
+        if (!on) {
             console.log("game over");
             return;
         }
@@ -156,6 +174,7 @@ export function useGame(): Game {
         if (connected) {
             console.log(connected);
             setFour(connected);
+            setOn(false);
             return;
         }
 
@@ -166,6 +185,9 @@ export function useGame(): Game {
         grid,
         turn,
         four,
+        on,
+        start,
+        stop,
         drop,
         positionAt,
     };

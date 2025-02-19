@@ -34,6 +34,10 @@ export function SocketControls({ room }: Props) {
         room.newId();
     }
 
+    function handleJoinClick() {
+        room.join(friendCode.join(""));
+    }
+
     const positions = Array(CODE_LENGTH)
         .fill(0)
         .map((_, i) => i);
@@ -184,7 +188,7 @@ export function SocketControls({ room }: Props) {
                     ))}
                 </div>
                 <button
-                    onClick={() => room.join(friendCode.join(""))}
+                    onClick={() => handleJoinClick()}
                     style={{
                         fontSize: "0.8rem",
                         backgroundColor: "#e49d53",
