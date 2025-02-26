@@ -27,7 +27,9 @@ function App() {
             game.drop(playerTurn, event.col);
         });
 
-        if (room.ready && !game.on) {
+        // Before starting the game, check that it has not already started and
+        // that it has not already ended
+        if (room.ready && !game.on && !game.four.length) {
             game.start();
         }
         if (game.on && !room.ready) {
