@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { Game } from "../hooks/useGame";
 import { Room } from "../hooks/useRoom";
 import GridSlot from "./GridSlot";
@@ -13,28 +14,34 @@ export function GameGrid({ room, game }: Props) {
 
     // On tap/click, just emit the intent. I will update my visual board only
     // when receiving the echo of this intent in the onDropEvent() handler.
-    function select(position: Position) {
-        console.log(`select: turn ${game.turn} col ${position.j}`);
-        // If it's not my turn, do nothing
-        if (game.turn != room.playingAs) {
-            console.log("not my turn");
-            return;
-        }
-        room.drop(position.j);
-    }
+    const select = useCallback(
+        (position: Position) => {
+            console.log(`select: turn ${game.turn} col ${position.j}`);
+            // If it's not my turn, do nothing
+            if (game.turn != room.playingAs) {
+                console.log("not my turn");
+                return;
+            }
+            room.drop(position.j);
+        },
+        [game, room]
+    );
 
     const disabled = !room.ready;
 
-    function turnLabel(): string {
+    const turnLabel = useCallback(() => {
         if (game.on) {
             return room.playingAs === game.turn ? "My turn" : "Friend's turn";
+        } else if (game.four.length === 4) {
+            return "Winner!";
         }
-        return "Nobody's turn";
-    }
+        return "Waiting to start...";
+    }, [game, room]);
 
-    function gameOnLabel(): string {
-        return game.on ? "Game on" : "Game off";
-    }
+    const gameOnLabel = useCallback(
+        () => (game.on ? "Game on" : "Game off"),
+        [game.on]
+    );
 
     return (
         <div style={{ width: "100%" }}>

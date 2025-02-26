@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Position } from "../types/Position";
 
 const N_ROWS = 6;
@@ -26,25 +26,28 @@ export function useGame(): Game {
     const [four, setFour] = useState<Position[]>([]);
     const [on, setOn] = useState(false);
 
-    function start() {
+    const start = useCallback(() => {
         // If the game is already on, do nothing
         if (on) {
             return;
         }
         setOn(true);
-    }
+    }, [on]);
 
-    function stop() {
+    const stop = useCallback(() => {
         // If the game is not on, then do nothing
         if (!on) {
             return;
         }
         setOn(false);
-    }
+    }, [on]);
 
-    function at(p: Position): null | number {
-        return grid[indexAt(p)];
-    }
+    const at = useCallback(
+        function (p: Position): null | number {
+            return grid[indexAt(p)];
+        },
+        [grid]
+    );
 
     function positionAt(index: number): Position {
         return {
@@ -119,67 +122,85 @@ export function useGame(): Game {
         ].filter((s) => s != null);
     }
 
-    function allSame(segment: Position[]): boolean {
-        return segment
-            .map((p) => at(p))
-            .every((value, _, array) => value != null && value === array[0]);
-    }
+    const allSame = useCallback(
+        function (segment: Position[]): boolean {
+            return segment
+                .map((p) => at(p))
+                .every(
+                    (value, _, array) => value != null && value === array[0]
+                );
+        },
+        [at]
+    );
 
-    function fourSame(p: Position): Position[] | null {
-        const segments = segmentsFrom(p);
-        const match = segments.findIndex((s) => allSame(s));
+    const fourSame = useCallback(
+        function (p: Position): Position[] | null {
+            const segments = segmentsFrom(p);
+            const match = segments.findIndex((s) => allSame(s));
 
-        return match == -1 ? null : segments[match];
-    }
+            return match == -1 ? null : segments[match];
+        },
+        [allSame]
+    );
 
-    function findFour(): Position[] | null {
-        const search = grid
-            .map((_, index) => positionAt(index))
-            .filter((p) => fourSame(p) != null);
+    const findFour = useCallback(
+        function (): Position[] | null {
+            const search = grid
+                .map((_, index) => positionAt(index))
+                .filter((p) => fourSame(p) != null);
 
-        return search.length ? fourSame(search[0]) : null;
-    }
+            return search.length ? fourSame(search[0]) : null;
+        },
+        [fourSame, grid]
+    );
 
-    function nextEmptyRow(column: number): number | null {
-        for (let i = 0; i < N_ROWS; i++) {
-            if (grid[indexAt({ i, j: column })] === null) {
-                return i;
+    const nextEmptyRow = useCallback(
+        function (column: number): number | null {
+            for (let i = 0; i < N_ROWS; i++) {
+                if (grid[indexAt({ i, j: column })] === null) {
+                    return i;
+                }
             }
-        }
-        return null;
-    }
+            return null;
+        },
+        [grid]
+    );
 
-    function drop(player: number, col: number): void {
-        if (!on) {
-            console.log("game over");
-            return;
-        }
+    const drop = useCallback(
+        function (player: number, col: number) {
+            if (!on) {
+                console.log("game over");
+                return;
+            }
 
-        // This shouldn't happen, but check anyways
-        if (player !== turn) {
-            console.log("drop out of turn");
-            return;
-        }
+            // This shouldn't happen, but check anyways
+            if (player !== turn) {
+                console.log("drop out of turn");
+                return;
+            }
 
-        const row = nextEmptyRow(col);
+            const row = nextEmptyRow(col);
 
-        if (row != null) {
-            grid[indexAt({ i: row, j: col })] = turn;
-        }
+            if (row != null) {
+                grid[indexAt({ i: row, j: col })] = turn;
+            }
 
-        setGrid([...grid]);
+            setGrid([...grid]);
 
-        const connected = findFour();
+            const connected = findFour();
 
-        if (connected) {
-            console.log(connected);
-            setFour(connected);
-            setOn(false);
-            return;
-        }
+            if (connected !== null) {
+                console.log(connected);
+                setFour(connected);
+                setOn(false);
+                console.log("set on=false");
+                return;
+            }
 
-        setTurn(turn === 0 ? 1 : 0);
-    }
+            setTurn(turn === 0 ? 1 : 0);
+        },
+        [findFour, grid, nextEmptyRow, on, turn]
+    );
 
     return {
         grid,
