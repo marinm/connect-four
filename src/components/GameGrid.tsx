@@ -68,7 +68,7 @@ export function GameGrid({ room, game }: Props) {
                                 key={index}
                                 value={value}
                                 select={() => select(position)}
-                                connected={game.four.includes(position)}
+                                connected={game.inFour(position)}
                             />
                         );
                     })}

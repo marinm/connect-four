@@ -31,6 +31,10 @@ export default function GridSlot(props: Props) {
         ...nullStyle,
         ...(props.value === 0 ? player0Style : {}),
         ...(props.value === 1 ? player1Style : {}),
+        color: "black",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
     };
 
     return (
@@ -46,7 +50,7 @@ export default function GridSlot(props: Props) {
                 overflow: "hidden",
             }}
         >
-            <div style={style}></div>
+            <div style={style}>{props.connected ? "✅" : ""}</div>
         </div>
     );
 }

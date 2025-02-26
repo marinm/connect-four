@@ -8,6 +8,7 @@ export type Game = {
     grid: (null | number)[];
     turn: 0 | 1;
     four: Position[];
+    inFour: (p: Position) => boolean;
     on: boolean;
     start: () => void;
     stop: () => void;
@@ -122,6 +123,13 @@ export function useGame(): Game {
         ].filter((s) => s != null);
     }
 
+    const inFour = useCallback(
+        (p: Position): boolean => {
+            return four.findIndex((f) => f.i === p.i && f.j === p.j) !== -1;
+        },
+        [four]
+    );
+
     const allSame = useCallback(
         function (segment: Position[]): boolean {
             return segment
@@ -206,6 +214,7 @@ export function useGame(): Game {
         grid,
         turn,
         four,
+        inFour,
         on,
         start,
         stop,
