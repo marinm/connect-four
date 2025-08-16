@@ -206,7 +206,7 @@ export function SocketControls({ room }: Props) {
                 style={{
                     width: "100%",
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent: "flex-start",
                     gap: "0.8ch",
                 }}
             >

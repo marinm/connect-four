@@ -10,26 +10,11 @@ export function StatusBadge(props: Props) {
     return (
         <div
             style={{
-                fontSize: "0.7rem",
-                flexGrow: "1",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                textTransform: "uppercase",
-                backgroundColor: "#eca55c",
-                padding: "0.5ch 1ch",
-                borderRadius: "0.5ch",
+                width: "1ch",
+                height: "1ch",
+                backgroundColor: indicatorColor,
+                borderRadius: "50%",
             }}
-        >
-            {props.label}
-            <div
-                style={{
-                    width: "1ch",
-                    height: "1ch",
-                    backgroundColor: indicatorColor,
-                    borderRadius: "50%",
-                }}
-            ></div>
-        </div>
+        ></div>
     );
 }
