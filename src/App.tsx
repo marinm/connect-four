@@ -3,43 +3,13 @@ import { SocketControls } from "./components/SocketControls";
 import { GameGrid } from "./components/GameGrid";
 import { useRoom } from "./hooks/useRoom";
 import { useGame } from "./hooks/useGame";
-import { useEffect } from "react";
-import { RoomDropEvent } from "./hooks/useRoom";
+import useRegisterDropEventHandler from "./hooks/useRegisterDropEventHandler";
 
 function App() {
     const room = useRoom();
     const game = useGame();
 
-    useEffect(() => {
-        room.onDropEvent((event: RoomDropEvent) => {
-            console.log(`drop event: turn ${game.turn} col ${event.col}`);
-
-            // Is it this player's turn?
-            const friendPlayingAs = room.playingAs === 0 ? 1 : 0;
-            const playerTurn =
-                event.id === room.myId ? room.playingAs : friendPlayingAs;
-
-            // This shouldn't happen, but check anyways
-            if (playerTurn !== game.turn) {
-                console.log("out of turn message");
-                return;
-            }
-            game.drop(playerTurn, event.col);
-        });
-
-        // Before starting the game, check that it has not already started and
-        // that it has not already ended
-        if (room.ready && !game.on && !game.four.length) {
-            game.start();
-        }
-        if (game.on && !room.ready) {
-            game.stop();
-        }
-    }, [room, game]);
-
-    if (room === null) {
-        return "";
-    }
+    useRegisterDropEventHandler({ room, game });
 
     if (!room.socket.isOnline) {
         return <div className="page">No internet connection</div>;
