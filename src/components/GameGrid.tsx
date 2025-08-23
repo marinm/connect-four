@@ -29,20 +29,6 @@ export function GameGrid({ room, game }: Props) {
 
     const disabled = !room.ready;
 
-    const turnLabel = useCallback(() => {
-        if (game.on) {
-            return room.playingAs === game.turn ? "My turn" : "Friend's turn";
-        } else if (game.four.length === 4) {
-            return "Winner!";
-        }
-        return "Waiting to start...";
-    }, [game, room]);
-
-    const gameOnLabel = useCallback(
-        () => (game.on ? "Game on" : "Game off"),
-        [game.on]
-    );
-
     return (
         <div style={{ width: "100%" }}>
             <div
@@ -73,16 +59,6 @@ export function GameGrid({ room, game }: Props) {
                         );
                     })}
                 </div>
-            </div>
-            <div
-                style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                }}
-            >
-                <div>{turnLabel()}</div>
-                <div>{gameOnLabel()}</div>
             </div>
         </div>
     );

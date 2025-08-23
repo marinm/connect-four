@@ -4,16 +4,13 @@ import { GameGrid } from "./components/GameGrid";
 import { useRoom } from "./hooks/useRoom";
 import { useGame } from "./hooks/useGame";
 import useRegisterDropEventHandler from "./hooks/useRegisterDropEventHandler";
+import StatusText from "./components/StatusText";
 
 function App() {
     const room = useRoom();
     const game = useGame();
 
     useRegisterDropEventHandler({ room, game });
-
-    if (!room.socket.isOnline) {
-        return <div className="page">No internet connection</div>;
-    }
 
     return (
         <div
@@ -29,26 +26,10 @@ function App() {
             }}
         >
             <SocketControls room={room} />
+            <StatusText room={room} game={game} />
             <GameGrid room={room} game={game} />
         </div>
     );
-
-    if (room.socket.readyState === WebSocket.CONNECTING) {
-        return <div className="page">Connecting...</div>;
-    }
-
-    if (room.socket.readyState === WebSocket.CLOSING) {
-        return <div className="page">Closing...</div>;
-    }
-
-    if (room.socket.readyState != WebSocket.OPEN) {
-        // This should never happen
-        return <div className="page">Error</div>;
-    }
-
-    if (!room.ready) {
-        return <div className="page">Waiting for friend...</div>;
-    }
 }
 
 export default App;
