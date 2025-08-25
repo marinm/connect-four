@@ -26,8 +26,8 @@ function App() {
             }}
         >
             <SocketControls room={room} />
-            <StatusText room={room} game={game} />
             <GameGrid room={room} game={game} />
+            <StatusText room={room} game={game} />
         </div>
     );
 }

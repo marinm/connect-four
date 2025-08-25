@@ -2,7 +2,6 @@ import { useState } from "react";
 import { classes } from "../utils/classes";
 import { Room } from "../hooks/useRoom";
 import { CODE_LENGTH } from "../config";
-import { StatusBadge } from "./StatusBadge";
 
 type Props = {
     room: Room;
@@ -201,26 +200,6 @@ export function SocketControls({ room }: Props) {
                 >
                     PAIR
                 </button>
-            </div>
-            <div
-                style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    gap: "0.8ch",
-                }}
-            >
-                <StatusBadge
-                    label="Internet"
-                    on={room.socket.isOnline}
-                    error={false}
-                />
-                <StatusBadge
-                    label="Server"
-                    on={room.socket.readyState === WebSocket.OPEN}
-                    error={false}
-                />
-                <StatusBadge label="Session" on={room.ready} error={false} />
             </div>
             <div
                 style={{
